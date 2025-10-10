@@ -69,5 +69,3 @@
     - `vendor/bin/rector process --dry-run`
 - Process
     - `vendor/bin/rector process`
-
-test
