@@ -28,8 +28,15 @@ jobs:
       run: |
         mkdir -p database
         touch database/database.sqlite
+
+    - name: Static analysis
+      run: composer stan
+
+    - name: Code style
+      run: composer pint
+
     - name: Execute tests (Unit and Feature tests) via Pest
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
-      run: ./vendor/bin/pest
+      run: composer tests
