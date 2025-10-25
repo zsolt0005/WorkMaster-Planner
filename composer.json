@@ -7,16 +7,17 @@
         "laravel/tinker": "^2.10.1"
     },
     "require-dev": {
-        "roave/security-advisories": "dev-latest",
         "driftingly/rector-laravel": "^2.0",
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.0",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^3.8",
-        "pestphp/pest-plugin-laravel": "^3.1"
+        "pestphp/pest-plugin-laravel": "^3.1",
+        "roave/security-advisories": "dev-latest"
     },
     "autoload": {
         "psr-4": {
@@ -58,7 +59,10 @@
             "php artisan migrate",
             "npm install",
             "npm run build"
-        ]
+        ],
+        "pint": "vendor/bin/pint --test --config pint.json -v",
+        "stan": "vendor/bin/phpstan analyse --configuration phpstan.neon",
+        "tests": "php artisan test"
     },
     "extra": {
         "laravel": {

@@ -1,21 +1,24 @@
-### For the first time only!
+## Development
+- `docker compose up -d` - Zapnutie web servera a php containera
+- `docker compose exec php bash` - Command line v php containery
+  - Update composer dependencies: `composer update`
+  - Run artisan commands: `php artisan [command]`
+  - **Overenie rules pre štýl kódu:** `composer pint` **(V pipeline)**
+  - **Statická analýza kódu:** `composer stan` **(V pipeline)**
+  - Pustenie všetkých testov: `composer tests` **(V pipeline)**
+- App url: http://localhost
+
+## For time setup
 - `git clone https://github.com/refactorian/laravel-docker.git`
 - `cd laravel-docker`
 - `docker compose up -d --build`
 - `docker compose exec php bash`
 - `composer setup`
 
-### From the second time onwards
-- `docker compose up -d`
 
-# Notes
-
-### Laravel App
-- URL: http://localhost
+# Useful commands
 
 ### Basic docker compose commands
-- Build or rebuild services
-    - `docker compose build`
 - Create and start containers
     - `docker compose up -d`
 - Stop and remove containers, networks
@@ -50,22 +53,3 @@
     - `php artisan schedule:clear-cache`
 - Flush expired password reset tokens
     - `php artisan auth:clear-resets`
-
-### Laravel Pint (Code Style Fixer | PHP-CS-Fixer)
-- Format all files
-    - `vendor/bin/pint`
-- Format specific files or directories
-    - `vendor/bin/pint app/Models`
-    - `vendor/bin/pint app/Models/User.php`
-- Format all files with preview
-    - `vendor/bin/pint -v`
-- Format uncommitted changes according to Git
-    - `vendor/bin/pint --dirty`
-- Inspect all files
-  - `vendor/bin/pint --test`
-
-### Rector
-- Dry Run
-    - `vendor/bin/rector process --dry-run`
-- Process
-    - `vendor/bin/rector process`
