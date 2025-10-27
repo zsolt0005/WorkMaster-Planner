@@ -61,3 +61,7 @@
     - `php artisan schedule:clear-cache`
 - Flush expired password reset tokens
     - `php artisan auth:clear-resets`
+
+
+### useful links
+  - pint rules: https://mlocati.github.io/php-cs-fixer-configurator/#version:3.13
