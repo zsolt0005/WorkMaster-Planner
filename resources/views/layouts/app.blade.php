@@ -26,10 +26,10 @@
     @yield('content')
 </main>
 
-<hr>
-
 {{-- FOOTER --}}
-@include('parts.footer')
+@if (!request()->routeIs('index'))
+    @include('parts.footer')
+@endif
 
 <!-- JAVASCRIPT FILES -->
 <script src="{{ asset('js/jquery.min.js') }}"></script>
