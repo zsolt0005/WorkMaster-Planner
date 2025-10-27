@@ -26,15 +26,16 @@ final class LoginController extends AController
     public function login(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'login'    => ['required'],
+            'login' => ['required'],
             'password' => ['required'],
         ]);
 
         $emailLogin = [User::EMAIL => $validated['login'], User::PASSWORD => $validated['password']];
         $usernameLogin = [User::USERNAME => $validated['login'], User::PASSWORD => $validated['password']];
 
-        if( Auth::attempt($emailLogin) || Auth::attempt($usernameLogin) ) {
+        if (Auth::attempt($emailLogin) || Auth::attempt($usernameLogin)) {
             $request->session()->regenerate();
+
             return redirect()->intended('/');
         }
 

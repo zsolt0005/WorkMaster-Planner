@@ -8,5 +8,5 @@ return [
     ],
     'errors' => [
         'invalid_credentials' => 'Invalid login credentials.',
-    ]
+    ],
 ];

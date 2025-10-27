@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
@@ -20,5 +20,3 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 });
-
-

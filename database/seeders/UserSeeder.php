@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 
 final class UserSeeder extends Seeder
 {
+    use WithoutModelEvents;
+
     public function run(): void
     {
         DB::table('users')->insert([

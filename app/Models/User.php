@@ -10,7 +10,9 @@ final class User extends Authenticatable
     use Notifiable;
 
     public const string USERNAME = 'username';
+
     public const string EMAIL = 'email';
+
     public const string PASSWORD = 'password';
 
     /**
