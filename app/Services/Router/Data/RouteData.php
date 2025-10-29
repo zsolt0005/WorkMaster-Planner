@@ -5,7 +5,7 @@ namespace App\Services\Router\Data;
 class RouteData
 {
     /**
-     * @param class-string $class
+     * @param  class-string  $class
      */
     public function __construct(
         public string $class,
@@ -13,6 +13,5 @@ class RouteData
         public string $requestMethod,
         public string $path,
         public string $name,
-    ) {
-    }
+    ) {}
 }

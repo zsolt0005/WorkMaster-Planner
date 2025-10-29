@@ -12,6 +12,7 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
+use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -21,7 +22,7 @@ class RoutRegistrator
 {
     private ?string $defaultMiddleware = null;
 
-    /** @var class-string<T>|null  */
+    /** @var class-string<T>|null */
     private ?string $controllerBase = null;
 
     private ?string $controllersPath = null;
@@ -34,21 +35,24 @@ class RoutRegistrator
     public function defaultMiddleware(string $defaultMiddleware): self
     {
         $this->defaultMiddleware = $defaultMiddleware;
+
         return $this;
     }
 
     /**
-     * @param class-string<T> $class
+     * @param  class-string<T>  $class
      */
     public function controllerBase(string $class): self
     {
         $this->controllerBase = $class;
+
         return $this;
     }
 
     public function controllersPath(string $path): self
     {
         $this->controllersPath = $path;
+
         return $this;
     }
 
@@ -67,6 +71,7 @@ class RoutRegistrator
         foreach ($routesData as $middleware => $routes) {
             if ($middleware === '') {
                 $this->registerRoutes($routes);
+
                 continue;
             }
 
@@ -74,6 +79,9 @@ class RoutRegistrator
         }
     }
 
+    /**
+     * @return class-string<T>[]
+     */
     private function getControllers(): array
     {
         $this->autoLoadControllers();
@@ -86,6 +94,9 @@ class RoutRegistrator
         );
     }
 
+    /**
+     * @throws DirectoryNotFoundException
+     */
     private function autoLoadControllers(): void
     {
         $basePath = base_path($this->controllersPath);
@@ -100,9 +111,9 @@ class RoutRegistrator
     }
 
     /**
-     * @param array $controllers
-     *
+     * @param  class-string<T>[]  $controllers
      * @return array<string, RouteData[]>
+     *
      * @throws ReflectionException
      */
     private function prepareRoutesData(array $controllers): array
@@ -116,15 +127,14 @@ class RoutRegistrator
             foreach ($publicMethods as $method) {
                 $attributes = array_filter(
                     $method->getAttributes(),
-                    static fn(ReflectionAttribute $attribute): bool
-                        => in_array($attribute->getName(), [Get::class, Post::class], true)
+                    static fn (ReflectionAttribute $attribute): bool => in_array($attribute->getName(), [Get::class, Post::class], true)
                 );
 
                 if (empty($attributes)) {
                     continue;
                 }
 
-                $middleware = ($method->getAttributes(Middleware::class)[0] ?? null)?->newInstance()?->name
+                $middleware = ($method->getAttributes(Middleware::class)[0] ?? null)?->newInstance()->name
                     ?? ($this->defaultMiddleware ?? '');
 
                 foreach ($attributes as $attribute) {
@@ -146,7 +156,7 @@ class RoutRegistrator
     }
 
     /**
-     * @param RouteData[] $routes
+     * @param  RouteData[]  $routes
      */
     private function registerRoutesWithMiddleware(string $middleware, array $routes): void
     {
@@ -158,7 +168,7 @@ class RoutRegistrator
     }
 
     /**
-     * @param RouteData[] $routes
+     * @param  RouteData[]  $routes
      */
     private function registerRoutes(array $routes): void
     {
