@@ -13,3 +13,5 @@ parameters:
         check:
             tooWideThrowType: true
             missingCheckedExceptionInThrows: true
+        uncheckedExceptionClasses:
+            - RuntimeException # Runtime exception should not be catched, so its not an error

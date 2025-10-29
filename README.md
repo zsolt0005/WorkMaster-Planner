@@ -1,12 +1,20 @@
 ## Development
 - `docker compose up -d` - Zapnutie web servera a php containera
 - `docker compose exec php bash` - Command line v php containery
-  - Update composer dependencies: `composer update`
-  - Run artisan commands: `php artisan [command]`
-  - **Overenie rules pre štýl kódu:** `composer pint` **(V pipeline)**
-  - **Statická analýza kódu:** `composer stan` **(V pipeline)**
-  - Pustenie všetkých testov: `composer tests` **(V pipeline)**
 - App url: http://localhost
+
+### Commands
+  - `composer update` - Update composer dependencies
+  - `php artisan [command]` - Run artisan commands
+  - `npm run build` - Rebuild js and css files (Všetky zmeny v resources/css a resources/js su viditelne po spusteni) 
+  - `composer pint` - **Overenie rules pre štýl kódu:** **(V pipeline)**
+  - `composer stan` - **Statická analýza kódu:** **(V pipeline)**
+  - `composer tests` - Pustenie všetkých testov **(V pipeline)**
+
+### Database commands
+  - `php artisan migrate` - Pustí migrácie
+  - `php artisan migrate:rollback` - Vráti migrácie
+  - `php artisan db:seed` - Pustí seed
 
 ## For time setup
 - `git clone https://github.com/refactorian/laravel-docker.git`
@@ -53,3 +61,7 @@
     - `php artisan schedule:clear-cache`
 - Flush expired password reset tokens
     - `php artisan auth:clear-resets`
+
+
+### useful links
+  - pint rules: https://mlocati.github.io/php-cs-fixer-configurator/#version:3.13
