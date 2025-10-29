@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\Router\Attributes\Get;
+use App\Services\Router\Attributes\Middleware;
+use App\Services\Router\Attributes\Post;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,6 +14,8 @@ use Illuminate\Validation\ValidationException;
 
 final class LoginController extends AController
 {
+    #[Get('/login', 'login')]
+    #[Middleware('guest')]
     public function default(): View|RedirectResponse
     {
         if (Auth::check()) {
@@ -23,6 +28,8 @@ final class LoginController extends AController
     /**
      * @throws ValidationException
      */
+    #[Post('/login', 'login')]
+    #[Middleware('guest')]
     public function login(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -44,6 +51,7 @@ final class LoginController extends AController
         ]);
     }
 
+    #[Get('/logout', 'logout')]
     public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
