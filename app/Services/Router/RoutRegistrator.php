@@ -58,6 +58,7 @@ class RoutRegistrator
 
     /**
      * @throws ReflectionException
+     * @throws DirectoryNotFoundException
      */
     public function register(): void
     {
@@ -81,6 +82,8 @@ class RoutRegistrator
 
     /**
      * @return class-string<T>[]
+     *
+     * @throws DirectoryNotFoundException
      */
     private function getControllers(): array
     {
