@@ -61,7 +61,7 @@
             "npm run build"
         ],
         "pint": "vendor/bin/pint --test --config pint.json -v",
-        "stan": "vendor/bin/phpstan analyse --configuration phpstan.neon",
+        "stan": "vendor/bin/phpstan analyse --configuration phpstan.neon -vvv",
         "tests": "php artisan test"
     },
     "extra": {
