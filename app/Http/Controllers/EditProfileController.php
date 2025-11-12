@@ -28,7 +28,6 @@ final class EditProfileController extends AController
     public function update(Request $request): RedirectResponse
     {
         $user = auth()->user();
-        $FullNameMaxLength = 3;
 
         $validated = $request->validate([
             'username' => [
@@ -43,7 +42,7 @@ final class EditProfileController extends AController
                 'max:255',
                 Rule::unique('users', 'email')->ignore(auth()->id()),
             ],
-            'full_name' => ['required', 'string', 'min:'.$FullNameMaxLength],
+            'full_name' => ['required', 'string', 'min:3'],
             'current_password' => ['nullable', 'string'],
             'password' => [
                 'nullable',
@@ -56,7 +55,9 @@ final class EditProfileController extends AController
 
         if (! empty($validated['password'])) {
             if (empty($validated['current_password']) || ! Hash::check($validated['current_password'], $user->password)) {
-                return back()->withErrors(['current_password' => 'Staré heslo je nesprávne.'])->withInput();
+                throw ValidationException::withMessages([
+                    'current_password' => __('profil.errors.current_password'),
+                ]);
             }
 
             $validated['password'] = Hash::make($validated['password']);
@@ -66,6 +67,6 @@ final class EditProfileController extends AController
 
         $user->update($validated);
 
-        return redirect('profile')->with('success', 'Profil bol aktualizovaný.');
+        return redirect()->route('profile')->with('success', __('profil.success.updated'));
     }
 }

@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Profile')
+@section('title', __('profile.title'))
 
 @section('content')
     <div class="container py-5">
-        <h1>Profil</h1>
+        <h1>{{ __('profile.heading.view') }}</h1>
 
         @if (session('success'))
             <div class="alert alert-success">
@@ -14,21 +14,21 @@
 
         <table class="table table-bordered w-auto">
             <tr>
-                <th>Email</th>
+                <th>{{ __('profile.form.email') }}</th>
                 <td>{{ $user->email }}</td>
             </tr>
             <tr>
-                <th>Meno (username)</th>
+                <th>{{ __('profile.form.username') }}</th>
                 <td>{{ $user->username }}</td>
             </tr>
             <tr>
-                <th>Full name</th>
+                <th>{{ __('profile.form.full_name') }}</th>
                 <td>{{ $user->full_name }}</td>
             </tr>
         </table>
 
-        <a href="{{ url('/edit-profile') }}" class="btn btn-primary mt-3">
-            Upraviť profil
+        <a href="{{ route('edit_profile') }}" class="btn btn-primary mt-3">
+            {{ __('profile.form.edit') }}
         </a>
     </div>
 @endsection

@@ -5,6 +5,12 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property string $username
+ * @property string $full_name
+ * @property string $email
+ * @property string $password
+ */
 final class User extends Authenticatable
 {
     use Notifiable;
@@ -16,10 +22,9 @@ final class User extends Authenticatable
     public const string PASSWORD = 'password';
 
     /**
-     * @property string $username
-     * @property string $full_name
-     * @property string $email
-     * @property string $password
+     * The attributes that are mass assignable.
+     * *
+     * * @var list<string>
      */
     protected $fillable = [
         'username',
