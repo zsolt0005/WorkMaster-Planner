@@ -10,6 +10,8 @@ final class ProfileController extends AController
     #[Get('/profile', 'profile')]
     public function default(): View
     {
-        return view('profile');
+        $user = auth()->user();
+
+        return view('profile', ['user' => $user]);
     }
 }

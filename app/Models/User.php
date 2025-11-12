@@ -16,12 +16,14 @@ final class User extends Authenticatable
     public const string PASSWORD = 'password';
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
+     * @property string $username
+     * @property string $full_name
+     * @property string $email
+     * @property string $password
      */
     protected $fillable = [
         'username',
+        'full_name',
         'email',
         'password',
     ];
