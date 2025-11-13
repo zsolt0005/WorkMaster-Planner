@@ -20,5 +20,13 @@ final class UserSeeder extends Seeder
             'password' => Hash::make('admin'),
             'is_admin' => true,
         ]);
+
+        DB::table('users')->insert([
+            'username' => 'manager',
+            'full_name' => 'Manager',
+            'email' => 'manager@workmasterplanner.com',
+            'password' => Hash::make('manager'),
+            'is_admin' => false,
+        ]);
     }
 }
