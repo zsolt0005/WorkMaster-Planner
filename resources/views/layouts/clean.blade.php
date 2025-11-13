@@ -27,7 +27,7 @@
 
         <!-- JAVASCRIPT FILES -->
         <script src="{{ asset('js/jquery.min.js') }}"></script>
-        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('js/bootstrap.bundle.js') }}"></script>
         <script src="{{ asset('js/jquery.sticky.js') }}"></script>
 
         @vite(['resources/js/app.js'])
