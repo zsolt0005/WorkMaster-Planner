@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Gate;
@@ -22,14 +23,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('create.role', function (User $user) {
-            return $user->hasPermission('create_role')
-                ? Response::allow()
-                : Response::deny('You cannot create role.');
-        });
+        $permissions = Permission::all();
+        foreach ($permissions as $permission) {
+            Gate::define($permission->perm_name, static function (User $user) use ($permission) {
+                if ($user->is_admin) {
+                    return Response::allow();
+                }
 
-        Gate::define('admin-only', function ($user) {
-            return $user->is_admin;
-        });
+                return $user->hasPermission($permission->perm_name)
+                    ? Response::allow()
+                    : Response::deny('You do not have permission for this action.');
+            });
+        }
     }
 }

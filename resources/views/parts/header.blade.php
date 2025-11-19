@@ -24,13 +24,11 @@
                     </a>
                 </li>
 
-                @can('admin-only')
                 <li class="nav-item">
                     <a href="{{ route('people_management') }}" class="nav-link {{ request()->is('people_management') ? 'active' : '' }}">
                         {{ __('header.people_management') }}
                     </a>
                 </li>
-                @endcan
 
                 <li class="nav-item">
                     <a href="{{ route('profile') }}" class="nav-link {{ request()->is('profile') ? 'active' : '' }}">

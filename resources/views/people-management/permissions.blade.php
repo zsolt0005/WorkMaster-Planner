@@ -8,10 +8,6 @@
 
         @include('people-management.partials._tabs', ['current' => 'permissions'])
 
-        @if (session('status'))
-            <div class="alert alert-success">{{ session('status') }}</div>
-        @endif
-
         <div class="row g-4 mb-5">
             <div class="col-12 col-lg-6">
                 <div class="card shadow-sm">

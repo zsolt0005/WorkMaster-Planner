@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Middleware\AdminOnly;
 use App\Models\Role;
+use App\Models\User;
 use App\Services\Router\Attributes\Get;
-use App\Services\Router\Attributes\Middleware;
 use Illuminate\Contracts\View\View;
 
 final class PeopleManagementController extends AController
 {
     #[Get('/people-management', 'people_management')]
-    #[Middleware(AdminOnly::class)]
     public function default(): View
     {
-        return view('people-management.roles', [
+        return view('people-management.users', [
             'roles' => Role::with('permissions')->orderBy('role_name')->get(),
+            'users' => User::with('roles')->orderBy('email')->get(),
         ]);
     }
 }

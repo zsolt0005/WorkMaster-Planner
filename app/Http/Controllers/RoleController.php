@@ -29,7 +29,7 @@ class RoleController extends AController
     #[Post('/people-management/create-role', 'create_role')]
     public function createRole(Request $request): RedirectResponse
     {
-        Gate::authorize('create.role');
+        Gate::authorize('create_role');
 
         Log::info('POST create role');
         $data = $request->validate([
