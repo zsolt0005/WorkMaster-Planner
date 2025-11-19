@@ -61,7 +61,7 @@
             "npm run build"
         ],
         "pint": "vendor/bin/pint --test --config pint.json -v",
-        "stan": "vendor/bin/phpstan analyse --configuration phpstan.neon -vvv --memory-limit 1G",
+        "stan": "vendor/bin/phpstan analyse --configuration phpstan.neon --memory-limit 1G",
         "tests": "php artisan test"
     },
     "extra": {

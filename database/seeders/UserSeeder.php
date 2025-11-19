@@ -13,7 +13,7 @@ final class UserSeeder extends Seeder
 
     public function run(): void
     {
-        DB::table('users')->insert([
+        DB::table('users')->insertOrIgnore([
             'username' => 'admin',
             'full_name' => 'Admin',
             'email' => 'admin@workmasterplanner.com',
@@ -21,11 +21,19 @@ final class UserSeeder extends Seeder
             'is_admin' => true,
         ]);
 
-        DB::table('users')->insert([
-            'username' => 'manager',
-            'full_name' => 'Manager',
-            'email' => 'manager@workmasterplanner.com',
-            'password' => Hash::make('manager'),
+        DB::table('users')->insertOrIgnore([
+            'username' => 'diCaprio',
+            'full_name' => 'Leonardo DiCaprio',
+            'email' => 'dicaprio@workmasterplanner.com',
+            'password' => Hash::make('dicaprio123'),
+            'is_admin' => false,
+        ]);
+
+        DB::table('users')->insertOrIgnore([
+            'username' => 'johnny_depp',
+            'full_name' => 'Johnny Depp',
+            'email' => 'johnydepp@workmasterplanner.com',
+            'password' => Hash::make('depp123'),
             'is_admin' => false,
         ]);
     }

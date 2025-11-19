@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 final class DatabaseSeeder extends Seeder
 {
@@ -15,9 +14,12 @@ final class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->truncate();
         $this->call([
             UserSeeder::class,
+            RoleSeeder::class,
+            PermissionSeeder::class,
+            RolePermissionSeeder::class, // Must be run after RoleSeeder and Permission seeder
+            UserRoleSeeder::class, // Must be run after UserSeeder and RoleSeeder
         ]);
     }
 }

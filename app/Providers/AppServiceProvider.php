@@ -6,6 +6,7 @@ use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (! Schema::hasTable('permissions')) {
+            return;
+        }
+
         $permissions = Permission::all();
         foreach ($permissions as $permission) {
             Gate::define($permission->perm_name, static function (User $user) use ($permission) {
