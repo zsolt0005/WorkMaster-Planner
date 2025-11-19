@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Dto\CalendarEvent;
+use App\Dto\DateEntry;
 use App\Services\Router\Attributes\Get;
 use DateMalformedStringException;
 use DateTimeImmutable;
@@ -14,40 +16,50 @@ final class CalendarController extends AController
     public function default(): View
     {
         // TODO [WP-6] getTimePeriod should get the selected time period by user and return data accordingly
+        $dayEntries = $this->getCalendarDayEntries();
+        $events = $this->getEventsForDays($dayEntries);
 
+        return view('calendar', [
+            'dayEntries' => $dayEntries,
+            'events' => $events
+        ]);
+    }
+
+    /**
+     * @return DateEntry[]
+     */
+    private function getCalendarDayEntries(): array
+    {
         try {
-            return view('calendar', [
-                'timePeriod' => $this->getTimePeriod(),
-            ]);
+            $today = new DateTimeImmutable('today');
+
+            // ISO-8601: N = 1 (Mon) .. 7 (Sun)
+            $isoDay = (int) $today->format('N');
+            $monday = $today->modify(sprintf('-%d day', $isoDay - 1));
+
+            $days = [];
+            for ($i = 0; $i < 7; $i++) {
+                $date = $monday->modify(sprintf('+%d days', $i));
+
+                $days[] = new DateEntry($date, $today);
+            }
+
+            return $days;
         } catch (DateMalformedStringException $e) {
             throw new RuntimeException('Failed to get time period', previous: $e);
         }
     }
 
     /**
-     * @throws DateMalformedStringException
+     * @param DateEntry[] $dayEntries
+     *
+     * @return CalendarEvent[]
      */
-    private function getTimePeriod(): array
+    private function getEventsForDays(array $dayEntries): array
     {
-        $today = new DateTimeImmutable('today');
-
-        // ISO-8601: N = 1 (Mon) .. 7 (Sun)
-        $isoDay = (int) $today->format('N');
-        $monday = $today->modify(sprintf('-%d day', $isoDay - 1));
-
-        $days = [];
-        for ($i = 0; $i < 7; $i++) {
-            $date = $monday->modify(sprintf('+%d days', $i));
-            $days[] = [
-                'date' => $date->format('Y-m-d'),
-                'label' => $date->format('l'),
-                'month' => $date->format('M'),
-                'day' => $date->format('j'),
-                'isWeekend' => $date->format('N') >= 6,
-                'isToday' => $date->format('Y-m-d') === $today->format('Y-m-d'),
-            ];
-        }
-
-        return $days;
+        return [
+            new CalendarEvent('Event 1', '09:00 - 10:00'),
+            new CalendarEvent('Event 2', '10:00 - 11:00'),
+        ];
     }
 }
