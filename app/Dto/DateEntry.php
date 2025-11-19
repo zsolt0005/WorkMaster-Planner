@@ -7,8 +7,8 @@ use DateTimeImmutable;
 final class DateEntry
 {
     public function __construct(
-        private readonly DateTimeImmutable $dateTime,
-        private ?DateTimeImmutable $todayDateTime = null,
+        public readonly DateTimeImmutable $dateTime,
+        public ?DateTimeImmutable $todayDateTime = null,
     ) {
         $this->todayDateTime ??= new DateTimeImmutable('today');
     }

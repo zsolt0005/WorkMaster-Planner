@@ -3,5 +3,13 @@
 }
 
 .calendar-day:hover {
-    background-color: rgba(0, 0, 0, 0.03); /* subtle */
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.calendar-events-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }

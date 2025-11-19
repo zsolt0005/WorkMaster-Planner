@@ -57,9 +57,10 @@ final class CalendarController extends AController
      */
     private function getEventsForDays(array $dayEntries): array
     {
+
         return [
-            new CalendarEvent('Event 1', '09:00 - 10:00'),
-            new CalendarEvent('Event 2', '10:00 - 11:00'),
+            new CalendarEvent('Event 1', $dayEntries[0]->dateTime->setTime(11, 00), $dayEntries[0]->dateTime->setTime(11, 30)),
+            new CalendarEvent('Event 2', $dayEntries[0]->dateTime->setTime(11, 00), $dayEntries[0]->dateTime->setTime(11, 30)),
         ];
     }
 }

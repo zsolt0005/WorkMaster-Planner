@@ -2,11 +2,15 @@
 
 namespace App\Dto;
 
+use DateTimeImmutable;
+
 final class CalendarEvent
 {
     public function __construct(
         public string $name,
-        public string $time,
+
+        public DateTimeImmutable $dateTimeFrom,
+        public DateTimeImmutable $dateTimeTo,
     )
     {
     }
