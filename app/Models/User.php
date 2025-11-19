@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -46,5 +47,15 @@ final class User extends Authenticatable
         return [
             'password' => 'hashed',
         ];
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'user_role');
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        return $this->roles()->whereHas('permissions', fn ($q) => $q->where('perm_name', $permission))->exists();
     }
 }

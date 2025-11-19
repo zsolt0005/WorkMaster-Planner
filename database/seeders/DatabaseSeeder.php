@@ -16,6 +16,10 @@ final class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
+            RoleSeeder::class,
+            PermissionSeeder::class,
+            RolePermissionSeeder::class, // Must be run after RoleSeeder and Permission seeder
+            UserRoleSeeder::class, // Must be run after UserSeeder and RoleSeeder
         ]);
     }
 }
