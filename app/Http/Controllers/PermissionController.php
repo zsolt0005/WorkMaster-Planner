@@ -39,7 +39,9 @@ class PermissionController extends AController
 
         Permission::create($data);
 
-        return back()->with('status', 'Permission created.');
+        $this->flashSuccess('Permission created.');
+
+        return back();
     }
 
     /**
@@ -58,7 +60,9 @@ class PermissionController extends AController
 
         $permission->roles()->sync($request->input('role_ids', []));
 
-        return back()->with('status', 'Roles updated for permission: '.$permission->perm_name);
+        $this->flashSuccess('Roles updated for permission: '.$permission->perm_name);
+
+        return back();
     }
 
     /**
@@ -79,7 +83,9 @@ class PermissionController extends AController
             'description' => $data['description'] ?? null,
         ]);
 
-        return back()->with('status', 'Permission updated successfully.');
+        $this->flashSuccess('Permission updated successfully.');
+
+        return back();
     }
 
     /**
@@ -93,6 +99,8 @@ class PermissionController extends AController
 
         $permission->delete();
 
-        return back()->with('status', 'Permission "'.$permission->perm_name.'" deleted successfully.');
+        $this->flashSuccess('Permission "'.$permission->perm_name.'" deleted successfully.');
+
+        return back();
     }
 }

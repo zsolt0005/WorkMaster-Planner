@@ -6,7 +6,11 @@
     <div class="container py-5">
         <h1 class="mb-4">People Management</h1>
 
-        @include('people-management.partials._tabs', ['current' => 'permissions'])
+        @include('parts._tabs', ['tabs' => [
+            'users' => __('people-management.tabs.users'),
+            'roles' => __('people-management.tabs.roles'),
+            'permissions' => __('people-management.tabs.permissions')
+        ]])
 
         <div class="row g-4 mb-5">
             <div class="col-12 col-lg-6">

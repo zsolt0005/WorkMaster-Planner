@@ -39,7 +39,9 @@ class RoleController extends AController
 
         Role::create($data);
 
-        return back()->with('status', 'Role created.');
+        $this->flashSuccess('Role created.');
+
+        return back();
     }
 
     /**
@@ -58,7 +60,9 @@ class RoleController extends AController
             'description' => $data['description'] ?? null,
         ]);
 
-        return back()->with('status', 'Role updated successfully.');
+        $this->flashSuccess('Role updated successfully.');
+
+        return back();
     }
 
     /**
@@ -73,6 +77,8 @@ class RoleController extends AController
 
         $role->delete();
 
-        return back()->with('status', 'Role deleted successfully.');
+        $this->flashSuccess('Role deleted successfully.');
+
+        return back();
     }
 }

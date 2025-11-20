@@ -11,7 +11,19 @@ final class RolePermissionSeeder extends Seeder
     use WithoutModelEvents;
 
     private static array $roleToPermissionsMap = [
-        'HR manager' => ['create_role', 'edit_role', 'view_role', 'assign_role', 'delete_role', 'create_permission', 'edit_permission', 'view_permission', 'assign_permission', 'delete_permission'],
+        'HR manager' => [
+            'create_role',
+            'edit_role',
+            'view_role',
+            'assign_role',
+            'delete_role',
+            'create_permission',
+            'edit_permission',
+            'view_permission',
+            'assign_permission',
+            'delete_permission',
+            'edit_calendar_settings',
+        ],
         'Employee' => [],
     ];
 
