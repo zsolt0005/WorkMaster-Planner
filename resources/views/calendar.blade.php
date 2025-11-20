@@ -131,10 +131,8 @@
                                 @foreach($events as $x => $event)
                                     <div class="card card-body mx-2 p-2 small bg-opacity-75 bg-secondary"
                                          style="
-                                            top: calc((100% / 48) * {{ $x === 0 ? 10 : 9}});
-                                            height: calc((100% / 48) * 3);
-                                            left: 0;
-                                            right: 0;
+                                            top: calc(calc((100% / 48) * {{ $x === 0 ? 1 : 5}}) - 1px);
+                                            height: calc(calc((100% / 48) * 3) - 1px);
                                          ">
                                         <div class="fw-semibold">{{ $event->name }}</div>
                                         <div class="text-muted">
