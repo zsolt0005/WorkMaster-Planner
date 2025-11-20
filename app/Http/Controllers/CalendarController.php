@@ -21,7 +21,7 @@ final class CalendarController extends AController
 
         return view('calendar', [
             'dayEntries' => $dayEntries,
-            'events' => $events
+            'events' => $events,
         ]);
     }
 
@@ -51,15 +51,14 @@ final class CalendarController extends AController
     }
 
     /**
-     * @param DateEntry[] $dayEntries
-     *
+     * @param  DateEntry[]  $dayEntries
      * @return CalendarEvent[]
      */
     private function getEventsForDays(array $dayEntries): array
     {
         return [
             new CalendarEvent('Event 1', $dayEntries[0]->dateTime->setTime(23, 00), $dayEntries[1]->dateTime->setTime(3, 30)),
-            //new CalendarEvent('Event 2', $dayEntries[0]->dateTime->setTime(11, 00), $dayEntries[0]->dateTime->setTime(11, 30)),
+            // new CalendarEvent('Event 2', $dayEntries[0]->dateTime->setTime(11, 00), $dayEntries[0]->dateTime->setTime(11, 30)),
         ];
     }
 }

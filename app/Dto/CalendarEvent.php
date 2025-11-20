@@ -12,9 +12,7 @@ final class CalendarEvent
 
         public DateTimeImmutable $dateTimeFrom,
         public DateTimeImmutable $dateTimeTo,
-    )
-    {
-    }
+    ) {}
 
     public function getStartPosition(DateTimeImmutable $actualDay): int
     {
