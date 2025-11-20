@@ -70,11 +70,10 @@
         <div class="container-fluid h-100 px-0" id="calendar">
             @php
                 $columnsCount = min(7, count($dayEntries));
-                $totalColumnsCount = $columnsCount + 1;
             @endphp
 
             <div class="d-grid h-100"
-                 style="grid-template-columns: 4rem repeat({{ $totalColumnsCount }}, minmax(0, 1fr)); grid-auto-rows: 1fr; min-width: 0;">
+                 style="grid-template-columns: 4rem repeat({{ $columnsCount }}, minmax(0, 1fr)); grid-auto-rows: 1fr; min-width: 0;">
                 @foreach($dayEntries as $i => $dayEntry)
                     @php
                         $isFirstInRow = $i % $columnsCount === 0;
@@ -99,13 +98,13 @@
                                 <div class="text-center fw-bold">Time</div>
                                 <div class="text-muted small">#</div>
                             </header>
-                            <div class="position-relative flex-grow-1 overflow-auto py-2 px-0" aria-label="events-list">
-                                <div class="d-grid gap-3 p-0 m-0">
+                            <div class="position-relative flex-grow-1 overflow-auto pb-2 pt-0 px-0" aria-label="events-list">
+                                <div class="d-grid p-0 m-0" style="align-content: start">
                                     @for($hour = 0; $hour <= 23; $hour++)
-                                        <div class="text-center fw-light border-bottom">
+                                        <div class="text-center fw-light border-bottom pb-2">
                                             {{ sprintf('%02d:00', $hour) }}
                                         </div>
-                                        <div class="text-center fw-light border-bottom border-dark">
+                                        <div class="text-center fw-light border-bottom border-dark pb-2">
                                             {{ sprintf('%02d:30', $hour) }}
                                         </div>
                                     @endfor
@@ -120,19 +119,19 @@
                             <div class="{{ $subHeaderText }} small">{{ $dayEntry->getMonth() }} {{ $dayEntry->getDay() }}</div>
                         </header>
 
-                        <div class="position-relative flex-grow-1 overflow-auto py-2 px-0" data-day="{{ $dayEntry->getDate() }}" aria-label="events-list">
-                            <div class="d-grid gap-3 p-0 m-0">
+                        <div class="position-relative flex-grow-1 overflow-auto pb-2 pt-0 px-0" data-day="{{ $dayEntry->getDate() }}" aria-label="events-list">
+                            <div class="d-grid p-0 m-0">
                                 @for($hour = 0; $hour <= 23; $hour++)
-                                    <div class="text-center fw-light border-bottom">&#8203;</div>
-                                    <div class="text-center fw-light border-bottom border-dark">&#8203;</div>
+                                    <div class="text-center fw-light border-bottom pb-2">&#8203;</div>
+                                    <div class="text-center fw-light border-bottom border-dark pb-2">&#8203;</div>
                                 @endfor
                             </div>
 
-                            <div class="p-0 m-0 calendar-events-layer">
-                                @foreach($events as $i => $event)
+                            <div class="p-0 pb-2 m-0 calendar-events-layer">
+                                @foreach($events as $x => $event)
                                     <div class="card card-body mx-2 p-2 small bg-opacity-75 bg-secondary"
                                          style="
-                                            top: calc((100% / 48) * {{ $i === 0 ? 10 : 9}});
+                                            top: calc((100% / 48) * {{ $x === 0 ? 10 : 9}});
                                             height: calc((100% / 48) * 3);
                                             left: 0;
                                             right: 0;
