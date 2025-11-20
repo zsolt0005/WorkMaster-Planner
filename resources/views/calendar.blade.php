@@ -131,8 +131,16 @@
 
                                 <div class="events-layer">
                                     @foreach ($events as $event)
+                                        @php
+                                            $startPosition = $event->getStartPosition($dayEntry->dateTime);
+                                            $offset = $event->getLengthOffset($dayEntry->dateTime);
+
+                                            if ($startPosition === -1 || $offset === -1) {
+                                                continue; // Errors are ignored
+                                            }
+                                        @endphp
                                         <div class="event"
-                                             style="grid-row: {{ $event->getStartPosition($dayEntry->dateTime) + 1 }} / span {{ $event->getLengthOffset($dayEntry->dateTime) }}">
+                                             style="grid-row: {{ $startPosition + 1 }} / span {{ $offset }}">
                                             <div class="card card-body mx-2 p-2 small bg-opacity-75 bg-secondary align-items-stretch">
                                                 <div class="fw-semibold">{{ $event->name }}</div>
                                                 <div class="text-muted">

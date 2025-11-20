@@ -3,6 +3,7 @@
 namespace App\Dto;
 
 use DateTimeImmutable;
+use Throwable;
 
 final class CalendarEvent
 {
@@ -17,16 +18,47 @@ final class CalendarEvent
 
     public function getStartPosition(DateTimeImmutable $actualDay): int
     {
-        $hour = (int) $this->dateTimeFrom->format('H');
-        $minute = (int) $this->dateTimeFrom->format('i');
+        try {
+            // Day boundaries for the day being rendered
+            $dayStart = $actualDay->setTime(0, 0, 0);
+            $dayEnd = $dayStart->modify('+1 day');
 
-        return ($hour * 60) + $minute;
+            // Clip event start to this day
+            $effectiveStart = $this->dateTimeFrom < $dayStart ? $dayStart : $this->dateTimeFrom;
+            $effectiveEnd = min($this->dateTimeTo, $dayEnd);
+
+            // If the clipped event does not intersect this day, -1 means "no intersection with the current day (Should never happen)"
+            if ($effectiveEnd <= $dayStart || $effectiveStart >= $dayEnd) {
+                return -1;
+            }
+
+            return (int) floor(($effectiveStart->getTimestamp() - $dayStart->getTimestamp()) / 60);
+        } catch (Throwable $e) {
+            return -1; // Should never happen, but just in case
+        }
     }
 
     public function getLengthOffset(DateTimeImmutable $actualDay): int
     {
-        $interval = $this->dateTimeTo->diff($this->dateTimeFrom);
+        try {
+            $dayStart = $actualDay->setTime(0, 0, 0);
+            $dayEnd = $dayStart->modify('+1 day');
 
-        return ($interval->h * 60) + $interval->i;
+            // Clip event to this day
+            $effectiveStart = $this->dateTimeFrom < $dayStart ? $dayStart : $this->dateTimeFrom;
+            $effectiveEnd = min($this->dateTimeTo, $dayEnd);
+
+            // No overlap with this day
+            if ($effectiveEnd <= $dayStart || $effectiveStart >= $dayEnd) {
+                return 0;
+            }
+
+            $lengthInMinutes = (int) floor(($effectiveEnd->getTimestamp() - $effectiveStart->getTimestamp()) / 60);
+
+            // Ensure at least 1 minute if there's any overlap at all
+            return max(0, $lengthInMinutes);
+        } catch (Throwable $e) {
+            return -1; // Should never happen, but just in case
+        }
     }
 }
