@@ -120,26 +120,28 @@
                         </header>
 
                         <div class="position-relative flex-grow-1 overflow-auto pb-2 pt-0 px-0" data-day="{{ $dayEntry->getDate() }}" aria-label="events-list">
-                            <div class="d-grid p-0 m-0">
-                                @for($hour = 0; $hour <= 23; $hour++)
-                                    <div class="text-center fw-light border-bottom pb-2">&#8203;</div>
-                                    <div class="text-center fw-light border-bottom border-dark pb-2">&#8203;</div>
-                                @endfor
-                            </div>
 
-                            <div class="p-0 pb-2 m-0 calendar-events-layer">
-                                @foreach($events as $x => $event)
-                                    <div class="card card-body mx-2 p-2 small bg-opacity-75 bg-secondary"
-                                         style="
-                                            top: calc(calc((100% / 48) * {{ $x === 0 ? 1 : 5}}) - 1px);
-                                            height: calc(calc((100% / 48) * 3) - 1px);
-                                         ">
-                                        <div class="fw-semibold">{{ $event->name }}</div>
-                                        <div class="text-muted">
-                                            {{ $event->dateTimeFrom->format('H:i') }} - {{ $event->dateTimeTo->format('H:i') }}
+                            <div class="calendar-day-body">
+                                <div class="time-slots">
+                                    @for($hour = 0; $hour <= 23; $hour++)
+                                        <div class="text-center fw-light border-bottom pb-2" style="grid-row: {{ ($hour * 60) + 1 }} / span 30">&#8203;</div>
+                                        <div class="text-center fw-light border-bottom border-dark pb-2" style="grid-row: {{ ($hour * 60) + 30 + 1 }} / span 30">&#8203;</div>
+                                    @endfor
+                                </div>
+
+                                <div class="events-layer">
+                                    @foreach ($events as $event)
+                                        <div class="event"
+                                             style="grid-row: {{ $event->getStartPosition($dayEntry->dateTime) + 1 }} / span {{ $event->getLengthOffset($dayEntry->dateTime) }}">
+                                            <div class="card card-body mx-2 p-2 small bg-opacity-75 bg-secondary align-items-stretch">
+                                                <div class="fw-semibold">{{ $event->name }}</div>
+                                                <div class="text-muted">
+                                                    {{ $event->dateTimeFrom->format('H:i') }} - {{ $event->dateTimeTo->format('H:i') }}
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </section>

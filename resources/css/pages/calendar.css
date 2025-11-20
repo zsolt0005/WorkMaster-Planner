@@ -3,19 +3,27 @@
 }
 
 .calendar-day:hover {
-    background-color: rgba(0, 0, 0, 0.03);
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
-.calendar-events-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+.calendar-day-body {
+    position: relative;
+    display: grid;
+    grid-template-rows: repeat(1440, minmax(0, 1fr));
+    grid-template-columns: 1fr;
+}
+
+.time-slots,
+.events-layer {
+    display: contents;
+}
+
+.time-slots > div,
+.events-layer > .event {
+    grid-column: 1;
+    align-self: stretch;
+}
+
+.events-layer > .event > .card {
     height: 100%;
-}
-
-.calendar-events-layer .card {
-    position: absolute;
-    left: 0;
-    right: 0;
 }
