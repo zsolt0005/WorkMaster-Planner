@@ -40,6 +40,7 @@ class RoleController extends AController
         Role::create($data);
 
         $this->flashSuccess('Role created.');
+
         return back();
     }
 
@@ -60,6 +61,7 @@ class RoleController extends AController
         ]);
 
         $this->flashSuccess('Role updated successfully.');
+
         return back();
     }
 
@@ -76,6 +78,7 @@ class RoleController extends AController
         $role->delete();
 
         $this->flashSuccess('Role deleted successfully.');
+
         return back();
     }
 }

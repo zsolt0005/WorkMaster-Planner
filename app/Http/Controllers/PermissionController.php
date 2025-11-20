@@ -40,6 +40,7 @@ class PermissionController extends AController
         Permission::create($data);
 
         $this->flashSuccess('Permission created.');
+
         return back();
     }
 
@@ -60,6 +61,7 @@ class PermissionController extends AController
         $permission->roles()->sync($request->input('role_ids', []));
 
         $this->flashSuccess('Roles updated for permission: '.$permission->perm_name);
+
         return back();
     }
 
@@ -82,6 +84,7 @@ class PermissionController extends AController
         ]);
 
         $this->flashSuccess('Permission updated successfully.');
+
         return back();
     }
 
@@ -97,6 +100,7 @@ class PermissionController extends AController
         $permission->delete();
 
         $this->flashSuccess('Permission "'.$permission->perm_name.'" deleted successfully.');
+
         return back();
     }
 }

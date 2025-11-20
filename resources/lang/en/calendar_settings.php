@@ -2,6 +2,6 @@
 
 return [
     'tabs' => [
-        'event_types' => 'Event types'
+        'event_types' => 'Event types',
     ],
 ];
