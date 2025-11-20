@@ -1,6 +1,7 @@
 @php
     use App\Dto\CalendarEvent;
     use App\Dto\DateEntry;
+    use App\Permissions;
 
     /** @var DateEntry[] $dayEntries */
     /** @var CalendarEvent[] $events */
@@ -61,8 +62,12 @@
                     </div>
                 </div>
 
-                <div class="col-auto ms-auto d-flex align-items-center">
+                <div class="col-auto ms-auto d-flex align-items-center gap-5">
                     <button type="submit" class="btn btn-primary mb-0">Search</button>
+
+                    @can(Permissions::EDIT_CALENDAR_SETTINGS)
+                        <a class="btn btn-outline-secondary" href="{{ route('calendar_settings') }}"><i class="bi bi-gear"></i></a>
+                    @endcan
                 </div>
             </form>
         </div>
@@ -119,13 +124,18 @@
                             <div class="{{ $subHeaderText }} small">{{ $dayEntry->getMonth() }} {{ $dayEntry->getDay() }}</div>
                         </header>
 
-                        <div class="position-relative flex-grow-1 overflow-auto pb-2 pt-0 px-0" data-day="{{ $dayEntry->getDate() }}" aria-label="events-list">
+                        <div class="position-relative flex-grow-1 overflow-auto pb-2 pt-0 px-0" data-day="{{ $dayEntry->getDate() }}"
+                             aria-label="events-list">
 
                             <div class="calendar-day-body">
                                 <div class="time-slots">
                                     @for($hour = 0; $hour <= 23; $hour++)
-                                        <div class="text-center fw-light border-bottom pb-2" style="grid-row: {{ ($hour * 60) + 1 }} / span 30">&#8203;</div>
-                                        <div class="text-center fw-light border-bottom border-dark pb-2" style="grid-row: {{ ($hour * 60) + 30 + 1 }} / span 30">&#8203;</div>
+                                        <div class="text-center fw-light border-bottom pb-2" style="grid-row: {{ ($hour * 60) + 1 }} / span 30">
+                                            &#8203;
+                                        </div>
+                                        <div class="text-center fw-light border-bottom border-dark pb-2"
+                                             style="grid-row: {{ ($hour * 60) + 30 + 1 }} / span 30">&#8203;
+                                        </div>
                                     @endfor
                                 </div>
 

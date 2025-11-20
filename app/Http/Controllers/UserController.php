@@ -40,6 +40,8 @@ class UserController extends AController
 
         $user->roles()->sync($ids);
 
-        return back()->with('status', 'Roles updated for user: '.$user->email);
+        $this->flashSuccess('Roles updated for user: '.$user->email);
+
+        return back();
     }
 }

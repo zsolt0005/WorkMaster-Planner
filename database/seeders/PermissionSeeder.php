@@ -12,6 +12,41 @@ final class PermissionSeeder extends Seeder
 
     public function run(): void
     {
+        $this->createPermissionsPermissions();
+        $this->createRolePermissions();
+        $this->createCalendarPermissions();
+    }
+
+    private function createRolePermissions(): void
+    {
+        DB::table('permissions')->insertOrIgnore([
+            'perm_name' => 'create_role',
+            'description' => 'Allows to create roles',
+        ]);
+
+        DB::table('permissions')->insertOrIgnore([
+            'perm_name' => 'edit_role',
+            'description' => 'Allows to edit roles',
+        ]);
+
+        DB::table('permissions')->insertOrIgnore([
+            'perm_name' => 'delete_role',
+            'description' => 'Allows to delete roles',
+        ]);
+
+        DB::table('permissions')->insertOrIgnore([
+            'perm_name' => 'view_role',
+            'description' => 'Allows to view roles',
+        ]);
+
+        DB::table('permissions')->insertOrIgnore([
+            'perm_name' => 'assign_role',
+            'description' => 'Allows to assign role to user',
+        ]);
+    }
+
+    private function createPermissionsPermissions(): void
+    {
         DB::table('permissions')->insertOrIgnore([
             'perm_name' => 'create_permission',
             'description' => 'Allows to create permissions',
@@ -36,30 +71,13 @@ final class PermissionSeeder extends Seeder
             'perm_name' => 'assign_permission',
             'description' => 'Allows to assign permission to role',
         ]);
+    }
 
+    private function createCalendarPermissions(): void
+    {
         DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'create_role',
-            'description' => 'Allows to create roles',
-        ]);
-
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'edit_role',
-            'description' => 'Allows to edit roles',
-        ]);
-
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'delete_role',
-            'description' => 'Allows to delete roles',
-        ]);
-
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'view_role',
-            'description' => 'Allows to view roles',
-        ]);
-
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'assign_role',
-            'description' => 'Allows to assign role to user',
+            'perm_name' => 'edit_calendar_settings',
+            'description' => 'Allows to view and modify calendar settings',
         ]);
     }
 }

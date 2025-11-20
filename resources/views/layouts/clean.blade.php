@@ -22,9 +22,15 @@
         @yield('header')
 
         <main>
-            @if (session('status'))
-                <div class="alert alert-success">{{ session('status') }}</div>
+            @php($flashes = session('flash', []))
+            @if(!empty($flashes))
+                <div class="container pt-2">
+                    @foreach(session('flash', []) as $flash)
+                        <div class="alert alert-{{ $flash['type'] }}">{{ $flash['message'] }}</div>
+                    @endforeach
+                </div>
             @endif
+
             @yield('content')
         </main>
 
