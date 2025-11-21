@@ -31,7 +31,6 @@ class PermissionController extends AController
     #[Post('/people-management/permission', 'create_permission')]
     public function createPermission(Request $request): RedirectResponse
     {
-        Log::info('POST create permission');
         $data = $request->validate([
             'perm_name' => ['required', 'string', 'max:255', 'unique:permissions,perm_name'],
             'description' => ['nullable', 'string', 'max:255'],
