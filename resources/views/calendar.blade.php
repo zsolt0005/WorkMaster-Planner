@@ -167,5 +167,19 @@
 
     @include('parts._context_menu')
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuItems = new Map();
+            menuItems
+                .set('--spacer--main', '{{ __('calendar.context_menu.actions') }}')
+                .set('{{ __('calendar.context_menu.create_event') }}', 'createEventHandler')
+
+                .set('--spacer--other', '{{ __('calendar.context_menu.other') }}')
+                .set('{{ __('calendar.context_menu.refresh') }}', 'refreshEventHandler')
+
+            window.menuItems = menuItems;
+        })
+    </script>
+
     @vite(['resources/js/pages/calendar.js'])
 @endsection
