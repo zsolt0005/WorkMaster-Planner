@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 final class CalendarSettingsController extends AController
@@ -21,10 +22,13 @@ final class CalendarSettingsController extends AController
         Gate::authorize(Permissions::EDIT_CALENDAR_SETTINGS);
 
         return view('calendar-settings.event_types', [
-            'eventTypes' => EventType::all()
+            'eventTypes' => EventType::all(),
         ]);
     }
 
+    /**
+     * @throws ValidationException
+     */
     #[Post('/calendar-settings/event-type/create', 'calendar_settings__event_type__create')]
     public function createEventType(Request $request): RedirectResponse
     {
@@ -40,6 +44,9 @@ final class CalendarSettingsController extends AController
         return redirect()->route('calendar_settings');
     }
 
+    /**
+     * @throws ValidationException
+     */
     #[Post('/calendar-settings/event-type/update{eventType}', 'calendar_settings__event_type__update')]
     public function updateEventType(Request $request, EventType $eventType): RedirectResponse
     {

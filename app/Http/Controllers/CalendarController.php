@@ -14,6 +14,7 @@ use RuntimeException;
 final class CalendarController extends AController
 {
     private const array VIEW_TYPES = ['month', 'week', 'day'];
+
     private const string DEFAULT_VIEW_TYPE = 'week';
 
     #[Get('/', 'calendar')]
