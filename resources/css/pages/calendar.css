@@ -1,3 +1,7 @@
+.calendar-days {
+    min-width: 960px !important;
+}
+
 .calendar-day {
     transition: background-color .15s ease-in-out;
 }
@@ -26,4 +30,20 @@
 
 .events-layer > .event > .card {
     height: 100%;
+}
+
+.time-slot::before {
+    content: "";
+    display: inline-block;
+    width: 100%;
+}
+
+.time-slot:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.event .card:hover {
+    --bs-bg-opacity: 0.9 !important;
+    cursor: pointer;
 }

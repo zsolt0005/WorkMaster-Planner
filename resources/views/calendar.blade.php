@@ -77,7 +77,7 @@
                 $columnsCount = min(7, count($dayEntries));
             @endphp
 
-            <div class="d-grid h-100"
+            <div class="d-grid h-100 calendar-days"
                  style="grid-template-columns: 4rem repeat({{ $columnsCount }}, minmax(0, 1fr)); grid-auto-rows: 1fr; min-width: 0;">
                 @foreach($dayEntries as $i => $dayEntry)
                     @php
@@ -130,12 +130,8 @@
                             <div class="calendar-day-body">
                                 <div class="time-slots">
                                     @for($hour = 0; $hour <= 23; $hour++)
-                                        <div class="text-center fw-light border-bottom pb-2" style="grid-row: {{ ($hour * 60) + 1 }} / span 30">
-                                            &#8203;
-                                        </div>
-                                        <div class="text-center fw-light border-bottom border-dark pb-2"
-                                             style="grid-row: {{ ($hour * 60) + 30 + 1 }} / span 30">&#8203;
-                                        </div>
+                                        <div class="time-slot text-center fw-light border-bottom pb-2" style="grid-row: {{ ($hour * 60) + 1 }} / span 30"></div>
+                                        <div class="time-slot text-center fw-light border-bottom border-dark pb-2" style="grid-row: {{ ($hour * 60) + 30 + 1 }} / span 30"></div>
                                     @endfor
                                 </div>
 
