@@ -13,8 +13,8 @@
   - `composer tests` - Pustenie všetkých testov **(V pipeline)**
 
 ### Database commands
-  - `php artisan migrate` - Pustí migrácie
   - `php artisan migrate:rollback` - Vráti migrácie
+  - `php artisan migrate` - Pustí migrácie
   - `php artisan db:seed` - Pustí seed
 
 ## For time setup
