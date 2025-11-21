@@ -157,7 +157,7 @@
                                             $bgColor = $event->getBackgroundColor(0.75);
 
                                             if ($startPosition === -1 || $offset === -1) {
-                                                continue; // Errors are ignored
+                                                continue; // Not in the currently rendered day
                                             }
                                         @endphp
                                         <div class="event"
@@ -165,7 +165,7 @@
                                              data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $event->event->title }}">
                                             <div class="card card-body mx-2 p-2 small align-items-stretch event-{{ $event->event->id }} h-100 d-flex flex-column">
                                                 <div class="event-title" style="color: {{ $event->getTextColor() }}; @if($occupiedSpace < 2) font-size: 0.75rem; @endif">
-                                                    {{ $event->event->title }} {{ $offset }}
+                                                    {{ $event->event->title }}
                                                 </div>
 
                                                 @if($availableSpace > 0)
