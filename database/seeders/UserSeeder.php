@@ -13,12 +13,28 @@ final class UserSeeder extends Seeder
 
     public function run(): void
     {
-        DB::table('users')->insert([
+        DB::table('users')->insertOrIgnore([
             'username' => 'admin',
             'full_name' => 'Admin',
             'email' => 'admin@workmasterplanner.com',
             'password' => Hash::make('admin'),
             'is_admin' => true,
+        ]);
+
+        DB::table('users')->insertOrIgnore([
+            'username' => 'diCaprio',
+            'full_name' => 'Leonardo DiCaprio',
+            'email' => 'dicaprio@workmasterplanner.com',
+            'password' => Hash::make('dicaprio123'),
+            'is_admin' => false,
+        ]);
+
+        DB::table('users')->insertOrIgnore([
+            'username' => 'johnny_depp',
+            'full_name' => 'Johnny Depp',
+            'email' => 'johnydepp@workmasterplanner.com',
+            'password' => Hash::make('depp123'),
+            'is_admin' => false,
         ]);
     }
 }

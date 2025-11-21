@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Services\Router\Attributes\Get;
-use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
 final class PeopleManagementController extends AController
 {
     #[Get('/people-management', 'people_management')]
-    public function default(): View
+    public function default(): RedirectResponse
     {
-        return view('people_management');
+        return redirect()->route('users');
     }
 }
