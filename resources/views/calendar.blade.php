@@ -165,5 +165,7 @@
         </div>
     </div>
 
+    @include('parts._context_menu')
+
     @vite(['resources/js/pages/calendar.js'])
 @endsection

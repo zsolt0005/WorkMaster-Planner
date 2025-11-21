@@ -1,0 +1,57 @@
+.calendar-context-menu {
+    position: fixed;
+    z-index: 2000;
+    min-width: 180px;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: .25rem;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+    font-size: 0.9rem;
+}
+
+.calendar-context-menu ul {
+    padding: .25rem 0;
+}
+
+.calendar-context-menu li {
+    padding: .25rem .75rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.calendar-context-menu li:hover {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+/* Spacer / group title */
+.calendar-context-menu li.calendar-context-menu-spacer {
+    cursor: default;
+    padding: .25rem .75rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+/* The "------" lines left and right of the title */
+.calendar-context-menu li.calendar-context-menu-spacer::before,
+.calendar-context-menu li.calendar-context-menu-spacer::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Do not apply hover styling to spacers */
+.calendar-context-menu li.calendar-context-menu-spacer:hover {
+    background-color: transparent;
+    color: #6c757d;
+}
+
+/* Utility: hide/show via JS */
+.calendar-context-menu.d-none {
+    display: none !important;
+}
