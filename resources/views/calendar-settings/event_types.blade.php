@@ -117,7 +117,7 @@
                                                         <div class="mb-3">
                                                             <label class="form-label" for="role_description">{{ __('calendar_settings.create.description') }}</label>
                                                             <input type="text" id="role_description" name="description"
-                                                                   value="{{ old('description') }}"
+                                                                   value="{{ old('description') ?? $eventType->description }}"
                                                                    class="form-control @error('description') is-invalid @enderror"
                                                                    placeholder="{{ __('calendar_settings.create.description_placeholder') }}">
                                                         </div>
