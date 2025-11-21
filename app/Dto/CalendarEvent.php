@@ -68,7 +68,7 @@ final class CalendarEvent
         return $this->hexToRgb($this->event->eventType->background_color, $opacity);
     }
 
-    public function getTextColor(float $opacity): Rgba
+    public function getTextColor(float $opacity = 1.0): Rgba
     {
         return $this->hexToRgb($this->event->eventType->text_color, $opacity);
     }

@@ -12,6 +12,21 @@ readonly class Rgba
     ) {}
 
     /**
+     * Automatically adjust this color based on another color.
+     *
+     * - If the reference color is light, this color is darkened.
+     * - If the reference color is dark, this color is lightened.
+     */
+    public function autoAdjust(float $amount, self $reference): self
+    {
+        if ($reference->isLight()) {
+            return $this->darken($amount);
+        }
+
+        return $this->lighten($amount);
+    }
+
+    /**
      * Darken the color by a given factor (0.0–1.0).
      *
      * 0.0 = no change, 1.0 = fully black.
@@ -51,6 +66,21 @@ readonly class Rgba
             b: $this->clampChannel($b),
             a: $this->a,
         );
+    }
+
+    /**
+     * Determine if this color is visually "light" based on perceived luminance.
+     */
+    private function isLight(): bool
+    {
+        // Perceived luminance formula (ITU-R BT.601)
+        $luminance = (
+            0.299 * $this->r +
+            0.587 * $this->g +
+            0.114 * $this->b
+        ) / 255;
+
+        return $luminance >= 0.5;
     }
 
     private function clamp01(float $value): float

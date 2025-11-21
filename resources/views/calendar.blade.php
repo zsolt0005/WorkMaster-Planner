@@ -140,11 +140,11 @@
                                     <style>
                                         @foreach ($events as $event)
                                             .event-{{ $event->event->id }} {
-                                                background-color: {{ $event->getBackgroundColor(0.75) }};
+                                                background-color: {{ $event->getBackgroundColor(0.9) }};
                                             }
 
                                             .event-{{ $event->event->id }}:hover {
-                                                background-color: {{ $event->getBackgroundColor(0.90) }};
+                                                background-color: {{ $event->getBackgroundColor(1) }};
                                             }
                                         @endforeach
                                     </style>
@@ -152,8 +152,9 @@
                                         @php
                                             $startPosition = $event->getStartPosition($dayEntry->dateTime);
                                             $offset = $event->getLengthOffset($dayEntry->dateTime);
-                                            $occupiedSpace = (int) ($offset / 30);
+                                            $occupiedSpace = $offset / 30;
                                             $availableSpace = max(0, $occupiedSpace - 2);
+                                            $bgColor = $event->getBackgroundColor(0.75);
 
                                             if ($startPosition === -1 || $offset === -1) {
                                                 continue; // Errors are ignored
@@ -163,13 +164,20 @@
                                              style="grid-row: {{ $startPosition + 1 }} / span {{ $offset }}; max-height: {{ $occupiedSpace * 33 }}px !important;"
                                              data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $event->event->title }}">
                                             <div class="card card-body mx-2 p-2 small align-items-stretch event-{{ $event->event->id }} h-100 d-flex flex-column">
-                                                <div class="event-title" style="color: {{ $event->getTextColor(1) }}; @if($occupiedSpace < 2) font-size: 0.75rem; @endif">
-                                                    {{ $event->event->title }}
+                                                <div class="event-title" style="color: {{ $event->getTextColor() }}; @if($occupiedSpace < 2) font-size: 0.75rem; @endif">
+                                                    {{ $event->event->title }} {{ $offset }}
                                                 </div>
 
                                                 @if($availableSpace > 0)
                                                     <div style="overflow: clip;">
-                                                        <span class="event-description" style="font-size: 0.75rem; line-height: 0.75rem; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: {{ $availableSpace * 2 }};">
+                                                        <span class="event-description" style="
+                                                            font-size: 0.75rem;
+                                                            line-height: 0.75rem;
+                                                            display: -webkit-box;
+                                                            -webkit-box-orient: vertical;
+                                                            -webkit-line-clamp: {{ $availableSpace * 2 }};
+                                                            color: {{ $event->getTextColor()->autoAdjust(0.5, $bgColor) }};
+                                                        ">
                                                             {{ $event->event->description }}
                                                         </span>
                                                     </div>
@@ -178,7 +186,7 @@
                                                 @if($occupiedSpace > 1)
                                                     <div class="flex-fill"></div>
 
-                                                    <div class="event-user small text-muted">
+                                                    <div class="event-user small fw-bold" style="color: {{ $event->getTextColor(1)->autoAdjust(0.25, $bgColor) }};">
                                                         {{ $event->event->assignedUser->full_name ?? 'Unassigned' }}
                                                     </div>
                                                 @endif
