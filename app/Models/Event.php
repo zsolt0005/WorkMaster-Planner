@@ -47,8 +47,8 @@ class Event extends Model
      */
     public static function getBetweenDates(DateTimeInterface $startDate, DateTimeInterface $endDate): Collection
     {
-        $startDate->setTime(0, 0, 0);
-        $endDate->setTime(23, 59, 59);
+        $startDate = $startDate->setTime(0, 0, 0);
+        $endDate = $endDate->setTime(23, 59, 59);
 
         return self::query()
             ->whereBetween(self::START_DATE_TIME, [$startDate, $endDate])
