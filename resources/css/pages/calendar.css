@@ -17,6 +17,21 @@
     grid-template-columns: 1fr;
 }
 
+.events-layer > .event {
+    height: 100%;
+    max-height: 100% !important;
+    overflow: hidden;
+}
+
+.events-layer > .event > .card {
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+}
+
 .time-slots,
 .events-layer {
     display: contents;
@@ -44,6 +59,19 @@
 }
 
 .event .card:hover {
-    --bs-bg-opacity: 0.9 !important;
     cursor: pointer;
+}
+
+.event-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.event-user {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    font-size: 0.75rem;
 }

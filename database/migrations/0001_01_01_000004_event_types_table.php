@@ -9,7 +9,7 @@ return new class() extends Migration
     public function up(): void
     {
         Schema::create('event_types', static function (Blueprint $table) {
-            $table->string('identifier')->primary();
+            $table->string('identifier', 64)->primary();
             $table->string('description')->nullable();
             $table->string('background_color');
             $table->string('text_color');

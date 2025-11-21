@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Dto\CalendarEvent;
 use App\Dto\DateEntry;
+use App\Models\Event;
 use App\Services\Router\Attributes\Get;
 use DateMalformedStringException;
 use DateTimeImmutable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Nette\Utils\Arrays;
 use RuntimeException;
 
 final class CalendarController extends AController
@@ -72,15 +74,22 @@ final class CalendarController extends AController
     }
 
     /**
-     * @param  DateEntry[]  $dayEntries
+     * @param  non-empty-array<DateEntry>  $dayEntries
      * @return CalendarEvent[]
      */
     private function getEventsForDays(array $dayEntries): array
     {
-        return [
-            new CalendarEvent('Event 1', $dayEntries[0]->dateTime->setTime(23, 00), $dayEntries[1]->dateTime->setTime(3, 30)),
-            // new CalendarEvent('Event 2', $dayEntries[0]->dateTime->setTime(11, 00), $dayEntries[0]->dateTime->setTime(11, 30)),
-        ];
+        $firstDay = Arrays::first($dayEntries)->dateTime;
+        $lastDay = Arrays::last($dayEntries)->dateTime;
+
+        $events = Event::getBetweenDates($firstDay, $lastDay);
+
+        $eventsData = [];
+        foreach ($events as $event) {
+            $eventsData[] = new CalendarEvent($event);
+        }
+
+        return $eventsData;
     }
 
     private function getViewType(Request $request): string

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property string $full_name
+ */
 final class User extends Authenticatable
 {
     use Notifiable;
@@ -23,6 +26,7 @@ final class User extends Authenticatable
      */
     protected $fillable = [
         'username',
+        'full_name',
         'email',
         'password',
     ];

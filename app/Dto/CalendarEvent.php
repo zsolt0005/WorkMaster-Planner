@@ -2,17 +2,20 @@
 
 namespace App\Dto;
 
+use App\Models\Event;
 use DateTimeImmutable;
 use Throwable;
 
 final class CalendarEvent
 {
-    public function __construct(
-        public string $name,
+    public readonly DateTimeImmutable $dateTimeFrom;
+    public readonly DateTimeImmutable $dateTimeTo;
 
-        public DateTimeImmutable $dateTimeFrom,
-        public DateTimeImmutable $dateTimeTo,
-    ) {}
+    public function __construct(public Event $event)
+    {
+        $this->dateTimeFrom = $this->event->getStartDateTime();
+        $this->dateTimeTo = $this->event->getEndDateTime();
+    }
 
     public function getStartPosition(DateTimeImmutable $actualDay): int
     {
@@ -58,5 +61,31 @@ final class CalendarEvent
         } catch (Throwable $e) {
             return -1; // Should never happen, but just in case
         }
+    }
+
+    public function getBackgroundColor(float $opacity): Rgba
+    {
+        return $this->hexToRgb($this->event->eventType->background_color, $opacity);
+    }
+
+    public function getTextColor(float $opacity): Rgba
+    {
+        return $this->hexToRgb($this->event->eventType->text_color, $opacity);
+    }
+
+    private function hexToRgb(string $hexColor, float $opacity = 1): Rgba
+    {
+        $hex = ltrim($hexColor, '#');
+
+        if (strlen($hex) === 3) {
+            // Expand short form (#f60 -> #ff6600)
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+        }
+
+        $r = (int) hexdec(substr($hex, 0, 2));
+        $g = (int) hexdec(substr($hex, 2, 2));
+        $b = (int) hexdec(substr($hex, 4, 2));
+
+        return new Rgba($r, $g, $b, $opacity);
     }
 }

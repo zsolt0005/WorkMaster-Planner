@@ -11,15 +11,15 @@ return new class() extends Migration
         Schema::create('events', static function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('event_type_id')->constrained('event_types');
+            $table->foreignUlid('event_type_id', 64)->constrained('event_types', 'identifier');
             $table->foreignId('assigned_user_id')->constrained('users');
             $table->foreignId('created_by_user_id')->constrained('users');
 
             $table->string('title');
             $table->text('description')->nullable();
 
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->dateTime('start_date_time');
+            $table->dateTime('end_date_time');
 
             $table->timestamps();
         });
@@ -27,6 +27,6 @@ return new class() extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('event_types');
+        Schema::dropIfExists('events');
     }
 };
