@@ -3,6 +3,7 @@
     use App\Dto\DateEntry;
     use App\Permissions;
 
+    /** @var string $viewType */
     /** @var DateEntry[] $dayEntries */
     /** @var CalendarEvent[] $events */
 @endphp
@@ -25,9 +26,9 @@
                     <div class="row align-items-center">
                         <div class="col-auto">
                             <div class="input-group mb-3">
-                                <button class="btn btn-outline-secondary" type="button">Day</button>
-                                <button class="btn btn-primary" type="button">Week</button>
-                                <button class="btn btn-outline-secondary" type="button">Month</button>
+                                <a href="{{ route('calendar', ['view' => 'day']) }}" class="btn {{ $viewType === 'day' ? 'btn-primary' : 'btn-outline-secondary' }}" type="button">Day</a>
+                                <a href="{{ route('calendar', ['view' => 'week']) }}" class="btn {{ $viewType === 'week' ? 'btn-primary' : 'btn-outline-secondary' }}" type="button">Week</a>
+                                <a href="{{ route('calendar', ['view' => 'month']) }}" class="btn {{ $viewType === 'month' ? 'btn-primary' : 'btn-outline-secondary' }}" type="button">Month</a>
                             </div>
                         </div>
                     </div>
