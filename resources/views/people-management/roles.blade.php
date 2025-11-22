@@ -4,23 +4,23 @@
 
 @section('content')
     <div class="container py-5">
-        <h1 class="mb-4">People Management</h1>
+        <h1 class="mb-4">{{ __('roles.headers.people-management') }}</h1>
 
         @include('parts._tabs', ['tabs' => [
-            'users' => __('people-management.tabs.users'),
-            'roles' => __('people-management.tabs.roles'),
-            'permissions' => __('people-management.tabs.permissions')
+            'users' => __('tabs.users'),
+            'roles' => __('tabs.roles'),
+            'permissions' => __('tabs.permissions')
         ]])
 
         <div class="row g-4 mb-5">
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h2 class="h5 mb-3">Create Role</h2>
+                        <h2 class="h5 mb-3">{{ __('roles.headers.create-role') }}</h2>
                         <form method="POST" action="{{ route('create_role') }}" novalidate>
                             @csrf
                             <div class="mb-3">
-                                <label class="form-label" for="role_name">Name</label>
+                                <label class="form-label" for="role_name">{{ __('roles.forms.name') }}</label>
                                 <input type="text" id="role_name" name="role_name"
                                        value="{{ old('role_name') }}"
                                        class="form-control @error('role_name') is-invalid @enderror"
@@ -29,7 +29,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label" for="role_description">Description (optional)</label>
+                                <label class="form-label" for="role_description">{{ __('roles.forms.description') }}</label>
                                 <input type="text" id="role_description" name="description"
                                        value="{{ old('description') }}"
                                        class="form-control @error('description') is-invalid @enderror"
@@ -37,7 +37,7 @@
                                 @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 
-                            <button class="btn btn-primary">Create Role</button>
+                            <button class="btn btn-primary">{{ __('roles.buttons.create-role') }}</button>
                         </form>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
             <div class="col-12 col-lg-12">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h3 class="h4 mb-3">Existing Roles</h3>
+                        <h3 class="h4 mb-3">{{ __('roles.headers.people-management') }}</h3>
                         <ul class="list-group">
                             @forelse($roles as $role)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -64,10 +64,10 @@
 
                                     <div class="btn-group" role="group" aria-label="Role actions">
                                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editRoleModal-{{ $role->id }}">
-                                            Edit
+                                            {{ __('buttons.edit') }}
                                         </button>
                                         <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteRoleModal-{{ $role->id }}">
-                                            Delete
+                                            {{ __('buttons.delete') }}
                                         </button>
                                     </div>
                                 </li>
@@ -78,24 +78,24 @@
                                             <form action="{{ route('update_role', $role->id) }}" method="POST">
                                                 @csrf
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Edit Role</h5>
+                                                    <h5 class="modal-title">{{ __('roles.headers.edit-role') }}</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="mb-3">
-                                                        <label class="form-label" for="role-name-{{ $role->id }}">Name</label>
+                                                        <label class="form-label" for="role-name-{{ $role->id }}">{{ __('roles.forms.name') }}</label>
                                                         <input type="text" name="role_name" id="role-name-{{ $role->id }}"
                                                                class="form-control" value="{{ old('role_name', $role->role_name) }}" required>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label" for="role-description-{{ $role->id }}">Description</label>
+                                                        <label class="form-label" for="role-description-{{ $role->id }}">{{ __('roles.forms.description') }}</label>
                                                         <input type="text" name="description" id="role-description-{{ $role->id }}"
                                                                class="form-control" value="{{ old('description', $role->description) }}">
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button class="btn btn-link" data-bs-dismiss="modal" type="button">Cancel</button>
-                                                    <button class="btn btn-primary" type="submit">Save changes</button>
+                                                    <button class="btn btn-link" data-bs-dismiss="modal" type="button">{{ __('buttons.cancel') }}</button>
+                                                    <button class="btn btn-primary" type="submit">{{ __('buttons.save') }}</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -108,15 +108,15 @@
                                             <form method="POST" action="{{ route('delete_role', $role->id) }}">
                                                 @csrf
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Delete Role</h5>
+                                                    <h5 class="modal-title">{{ __('roles.headers.delete-role') }}</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     Are you sure you want to delete <strong>{{ $role->role_name }}</strong>?
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button class="btn btn-link" data-bs-dismiss="modal" type="button">Cancel</button>
-                                                    <button class="btn btn-danger" type="submit">Delete role</button>
+                                                    <button class="btn btn-link" data-bs-dismiss="modal" type="button">{{ __('buttons.cancel') }}</button>
+                                                    <button class="btn btn-danger" type="submit">{{ __('buttons.delete') }}</button>
                                                 </div>
                                             </form>
                                         </div>

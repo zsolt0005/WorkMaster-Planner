@@ -4,23 +4,23 @@
 
 @section('content')
     <div class="container py-5">
-        <h1 class="mb-4">People Management</h1>
+        <h1 class="mb-4">{{ __('permissions.headers.people-management') }}</h1>
 
         @include('parts._tabs', ['tabs' => [
-            'users' => __('people-management.tabs.users'),
-            'roles' => __('people-management.tabs.roles'),
-            'permissions' => __('people-management.tabs.permissions')
+            'users' => __('tabs.users'),
+            'roles' => __('tabs.roles'),
+            'permissions' => __('tabs.permissions')
         ]])
 
         <div class="row g-4 mb-5">
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h2 class="h5 mb-3">Create Permission</h2>
+                        <h2 class="h5 mb-3">{{ __('permissions.headers.create-permission') }}</h2>
                         <form method="POST" action="{{ route('create_permission') }}" novalidate>
                             @csrf
                             <div class="mb-3">
-                                <label class="form-label" for="perm_name">Name</label>
+                                <label class="form-label" for="perm_name">{{ __('permissions.forms.name') }}</label>
                                 <input type="text" id="perm_name" name="perm_name"
                                        value="{{ old('perm_name') }}"
                                        class="form-control @error('perm_name') is-invalid @enderror"
@@ -29,7 +29,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label" for="perm_description">Description (optional)</label>
+                                <label class="form-label" for="perm_description">{{ __('permissions.forms.description') }}</label>
                                 <input type="text" id="perm_description" name="description"
                                        value="{{ old('description') }}"
                                        class="form-control @error('description') is-invalid @enderror"
@@ -37,7 +37,7 @@
                                 @error('description') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 
-                            <button class="btn btn-primary">Create Permission</button>
+                            <button class="btn btn-primary">{{ __('permissions.buttons.create-permission') }}</button>
                         </form>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
             <div class="col-12 col-lg-12">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h2 class="h4 mb-3">Permissions</h2>
+                        <h2 class="h4 mb-3">{{ __('permissions.headers.existing-permissions') }}</h2>
                         <ul class="list-group">
                             @forelse($permissions as $permission)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -66,7 +66,7 @@
                                             data-bs-toggle="modal"
                                             data-bs-target="#assignPermModal-{{ $permission->id }}"
                                         >
-                                            Assign
+                                            {{ __('buttons.assign') }}
                                         </button>
 
                                         <button
@@ -75,7 +75,7 @@
                                             data-bs-toggle="modal"
                                             data-bs-target="#editPermModal-{{ $permission->id }}"
                                         >
-                                            Edit
+                                            {{ __('buttons.edit') }}
                                         </button>
 
                                         <button
@@ -84,7 +84,7 @@
                                             data-bs-toggle="modal"
                                             data-bs-target="#deletePermModal-{{ $permission->id }}"
                                         >
-                                            Delete
+                                            {{ __('buttons.delete') }}
                                         </button>
                                     </div>
                                 </li>
@@ -149,8 +149,8 @@
                                                 </div>
 
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-success">Save changes</button>
+                                                    <button type="button" class="btn btn-link" data-bs-dismiss="modal">{{ __('buttons.cancel') }}</button>
+                                                    <button type="submit" class="btn btn-success">{{ __('buttons.save') }}</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -164,13 +164,13 @@
                                             <form method="POST" action="{{ route('update_permission', $permission->id) }}">
                                                 @csrf
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Edit Permission</h5>
+                                                    <h5 class="modal-title">{{ __('permissions.headers.edit-permission') }}</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
 
                                                 <div class="modal-body">
                                                     <div class="mb-3">
-                                                        <label class="form-label" for="perm-name-{{ $permission->id }}">Name</label>
+                                                        <label class="form-label" for="perm-name-{{ $permission->id }}">{{ __('permissions.forms.name') }}</label>
                                                         <input
                                                             id="perm-name-{{ $permission->id }}"
                                                             type="text"
@@ -183,7 +183,7 @@
                                                     </div>
 
                                                     <div class="mb-3">
-                                                        <label class="form-label" for="perm-desc-{{ $permission->id }}">Description</label>
+                                                        <label class="form-label" for="perm-desc-{{ $permission->id }}">{{ __('permissions.forms.name') }}</label>
                                                         <input
                                                             id="perm-desc-{{ $permission->id }}"
                                                             type="text"
@@ -196,8 +196,8 @@
                                                 </div>
 
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                    <button type="button" class="btn btn-link" data-bs-dismiss="modal">{{ __('buttons.cancel') }}</button>
+                                                    <button type="submit" class="btn btn-primary">{{ __('buttons.save') }}</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -210,7 +210,7 @@
                                             <form method="POST" action="{{ route('delete_permission', $permission->id) }}">
                                                 @csrf
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Delete Permission</h5>
+                                                    <h5 class="modal-title">{{ __('permissions.headers.edit-permission') }}</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
 
@@ -222,8 +222,8 @@
                                                 </div>
 
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-danger">Delete permission</button>
+                                                    <button type="button" class="btn btn-link" data-bs-dismiss="modal">{{ __('buttons.cancel') }}</button>
+                                                    <button type="submit" class="btn btn-danger">{{ __('buttons.delete') }}</button>
                                                 </div>
                                             </form>
                                         </div>
