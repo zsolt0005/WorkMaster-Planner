@@ -15,6 +15,7 @@ final class PermissionSeeder extends Seeder
         $this->createPermissionsPermissions();
         $this->createRolePermissions();
         $this->createCalendarPermissions();
+        $this->createUsersPermissions();
     }
 
     private function createRolePermissions(): void
@@ -79,5 +80,14 @@ final class PermissionSeeder extends Seeder
             'perm_name' => 'edit_calendar_settings',
             'description' => 'Allows to view and modify calendar settings',
         ]);
+    }
+
+    private function createUsersPermissions(): void
+    {
+        DB::table('permissions')->insertOrIgnore([
+            'perm_name' => 'edit_profile_data',
+            'description' => 'Allows user to edit profile information\'s',
+        ]);
+
     }
 }

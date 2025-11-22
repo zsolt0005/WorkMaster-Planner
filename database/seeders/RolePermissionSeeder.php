@@ -24,7 +24,9 @@ final class RolePermissionSeeder extends Seeder
             'delete_permission',
             'edit_calendar_settings',
         ],
-        'Employee' => [],
+        'Employee' => [
+            'edit_profile_data',
+        ],
     ];
 
     public function run(): void
