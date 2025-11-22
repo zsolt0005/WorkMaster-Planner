@@ -20,6 +20,9 @@ class PermissionController extends AController
     #[Get('/people-management/permissions', 'permissions')]
     public function default(): View
     {
+        Gate::authorize(Permissions::VIEW_PERMISSION);
+        Gate::authorize(Permissions::VIEW_ROLE);
+
         return view('people-management.permissions', [
             'roles' => Role::with('permissions')->orderBy('role_name')->get(),
             'permissions' => Permission::orderBy('perm_name')->get(),
