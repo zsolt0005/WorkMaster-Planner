@@ -79,17 +79,17 @@
 
                             <div class="mb-3">
                                 <label class="form-label" for="current_password">{{ __('profile.form.current_password') }}</label>
-                                <input id="current_password" type="text" name="current_password" class="form-control">
+                                <input id="current_password" type="password" name="current_password" class="form-control">
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label" for="password">{{ __('profile.form.password') }}</label>
-                                <input id="password" type="text" name="password" class="form-control">
+                                <input id="password" type="password" name="password" class="form-control">
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label" for="password_confirmation">{{ __('profile.form.password_confirmation') }}</label>
-                                <input id="password_confirmation" type="text" name="password_confirmation" class="form-control">
+                                <input id="password_confirmation" type="password" name="password_confirmation" class="form-control">
                             </div>
                         </div>
 
