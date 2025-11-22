@@ -33,6 +33,7 @@ final class ProfileController extends AController
     {
         if ($user->id !== $this->getAuthUser()->id) {
             $this->flashError(__('profile.errors.not_your_profile'));
+
             return back();
         }
 
@@ -42,8 +43,9 @@ final class ProfileController extends AController
         // Handle password change
         $oldPassword = $request->input('current_password', null);
         if ($oldPassword !== null) {
-            if (!$user->comparePassword($oldPassword)) {
+            if (! $user->comparePassword($oldPassword)) {
                 $this->flashError(__('profile.errors.current_password'));
+
                 return back();
             }
 
@@ -51,6 +53,7 @@ final class ProfileController extends AController
             $newPasswordConfirmation = $request->input('password_confirmation');
             if ($newPassword !== $newPasswordConfirmation) {
                 $this->flashError(__('profile.errors.password_confirmation'));
+
                 return back();
             }
 
@@ -60,7 +63,7 @@ final class ProfileController extends AController
                     'string',
                     'min:5',
                     'confirmed',
-                ]
+                ],
             ]);
 
             if ($validator->fails()) {

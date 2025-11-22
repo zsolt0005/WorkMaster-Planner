@@ -40,7 +40,7 @@ abstract class AController
     {
         /** @var User|null $user */
         $user = auth()->user();
-        if($user === null) {
+        if ($user === null) {
             Redirect::route('login');
         }
 

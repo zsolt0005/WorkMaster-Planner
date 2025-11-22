@@ -25,7 +25,7 @@ final class RolePermissionSeeder extends Seeder
             'edit_calendar_settings',
         ],
         'Employee' => [
-            'edit_profile_data'
+            'edit_profile_data',
         ],
     ];
 
