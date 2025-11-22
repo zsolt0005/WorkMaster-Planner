@@ -13,7 +13,7 @@
         ]])
 
         <div class="row g-4 mb-5">
-            <div class="col-12 col-lg-6">
+            <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h2 class="h5 mb-3">{{ __('roles.headers.create-role') }}</h2>

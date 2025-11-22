@@ -3,6 +3,7 @@
     use App\Dto\DateEntry;
     use App\Permissions;
 
+    /** @var string $viewType */
     /** @var DateEntry[] $dayEntries */
     /** @var CalendarEvent[] $events */
 @endphp
@@ -25,9 +26,9 @@
                     <div class="row align-items-center">
                         <div class="col-auto">
                             <div class="input-group mb-3">
-                                <button class="btn btn-outline-secondary" type="button">Day</button>
-                                <button class="btn btn-primary" type="button">Week</button>
-                                <button class="btn btn-outline-secondary" type="button">Month</button>
+                                <a href="{{ route('calendar', ['view' => 'day']) }}" class="btn {{ $viewType === 'day' ? 'btn-primary' : 'btn-outline-secondary' }}" type="button">Day</a>
+                                <a href="{{ route('calendar', ['view' => 'week']) }}" class="btn {{ $viewType === 'week' ? 'btn-primary' : 'btn-outline-secondary' }}" type="button">Week</a>
+                                <a href="{{ route('calendar', ['view' => 'month']) }}" class="btn {{ $viewType === 'month' ? 'btn-primary' : 'btn-outline-secondary' }}" type="button">Month</a>
                             </div>
                         </div>
                     </div>
@@ -77,7 +78,7 @@
                 $columnsCount = min(7, count($dayEntries));
             @endphp
 
-            <div class="d-grid h-100"
+            <div class="d-grid h-100 calendar-days"
                  style="grid-template-columns: 4rem repeat({{ $columnsCount }}, minmax(0, 1fr)); grid-auto-rows: 1fr; min-width: 0;">
                 @foreach($dayEntries as $i => $dayEntry)
                     @php
@@ -130,32 +131,65 @@
                             <div class="calendar-day-body">
                                 <div class="time-slots">
                                     @for($hour = 0; $hour <= 23; $hour++)
-                                        <div class="text-center fw-light border-bottom pb-2" style="grid-row: {{ ($hour * 60) + 1 }} / span 30">
-                                            &#8203;
-                                        </div>
-                                        <div class="text-center fw-light border-bottom border-dark pb-2"
-                                             style="grid-row: {{ ($hour * 60) + 30 + 1 }} / span 30">&#8203;
-                                        </div>
+                                        <div class="time-slot text-center fw-light border-bottom pb-2" style="grid-row: {{ ($hour * 60) + 1 }} / span 30"></div>
+                                        <div class="time-slot text-center fw-light border-bottom border-dark pb-2" style="grid-row: {{ ($hour * 60) + 30 + 1 }} / span 30"></div>
                                     @endfor
                                 </div>
 
                                 <div class="events-layer">
+                                    <style>
+                                        @foreach ($events as $event)
+                                            .event-{{ $event->event->id }} {
+                                                background-color: {{ $event->getBackgroundColor(0.9) }};
+                                            }
+
+                                            .event-{{ $event->event->id }}:hover {
+                                                background-color: {{ $event->getBackgroundColor(1) }};
+                                            }
+                                        @endforeach
+                                    </style>
                                     @foreach ($events as $event)
                                         @php
                                             $startPosition = $event->getStartPosition($dayEntry->dateTime);
                                             $offset = $event->getLengthOffset($dayEntry->dateTime);
+                                            $occupiedSpace = $offset / 30;
+                                            $availableSpace = max(0, $occupiedSpace - 2);
+                                            $bgColor = $event->getBackgroundColor(0.75);
 
                                             if ($startPosition === -1 || $offset === -1) {
-                                                continue; // Errors are ignored
+                                                continue; // Not in the currently rendered day
                                             }
                                         @endphp
                                         <div class="event"
-                                             style="grid-row: {{ $startPosition + 1 }} / span {{ $offset }}">
-                                            <div class="card card-body mx-2 p-2 small bg-opacity-75 bg-secondary align-items-stretch">
-                                                <div class="fw-semibold">{{ $event->name }}</div>
-                                                <div class="text-muted">
-                                                    {{ $event->dateTimeFrom->format('H:i') }} - {{ $event->dateTimeTo->format('H:i') }}
+                                             style="grid-row: {{ $startPosition + 1 }} / span {{ $offset }}; max-height: {{ $occupiedSpace * 33 }}px !important;"
+                                             data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $event->event->title }}">
+                                            <div class="card card-body mx-2 p-2 small align-items-stretch event-{{ $event->event->id }} h-100 d-flex flex-column">
+                                                <div class="event-title" style="color: {{ $event->getTextColor() }}; @if($occupiedSpace < 2) font-size: 0.75rem; @endif">
+                                                    {{ $event->event->title }}
                                                 </div>
+
+                                                @if($availableSpace > 0)
+                                                    <div style="overflow: clip;">
+                                                        <span class="event-description" style="
+                                                            font-size: 0.75rem;
+                                                            line-height: 0.75rem;
+                                                            display: -webkit-box;
+                                                            -webkit-box-orient: vertical;
+                                                            -webkit-line-clamp: {{ $availableSpace * 2 }};
+                                                            color: {{ $event->getTextColor()->autoAdjust(0.5, $bgColor) }};
+                                                        ">
+                                                            {{ $event->event->description }}
+                                                        </span>
+                                                    </div>
+                                                @endif
+
+                                                @if($occupiedSpace > 1)
+                                                    <div class="flex-fill"></div>
+
+                                                    <div class="event-user small fw-bold" style="color: {{ $event->getTextColor(1)->autoAdjust(0.25, $bgColor) }};">
+                                                        {{ $event->event->assignedUser->full_name ?? 'Unassigned' }}
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     @endforeach
@@ -167,6 +201,22 @@
             </div>
         </div>
     </div>
+
+    @include('parts._context_menu')
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuItems = new Map();
+            menuItems
+                .set('--spacer--main', '{{ __('calendar.context_menu.actions') }}')
+                .set('{{ __('calendar.context_menu.create_event') }}', 'createEventHandler')
+
+                .set('--spacer--other', '{{ __('calendar.context_menu.other') }}')
+                .set('{{ __('calendar.context_menu.refresh') }}', 'refreshEventHandler')
+
+            window.menuItems = menuItems;
+        })
+    </script>
 
     @vite(['resources/js/pages/calendar.js'])
 @endsection
