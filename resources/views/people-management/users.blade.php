@@ -4,19 +4,19 @@
 
 @section('content')
     <div class="container py-5">
-        <h1 class="mb-4">People Management</h1>
+        <h1 class="mb-4">{{ __('users.headers.people-management') }}</h1>
 
         @include('parts._tabs', ['tabs' => [
-            'users' => __('people-management.tabs.users'),
-            'roles' => __('people-management.tabs.roles'),
-            'permissions' => __('people-management.tabs.permissions')
+            'users' => __('tabs.users'),
+            'roles' => __('tabs.roles'),
+            'permissions' => __('tabs.permissions')
         ]])
 
         <div class="row g-4">
             <div class="col-12 col-lg-12">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h2 class="h4 mb-3">Users</h2>
+                        <h2 class="h4 mb-3">{{ __('users.headers.users') }}</h2>
 
                         <ul class="list-group">
                             @forelse($users as $user)
@@ -29,7 +29,7 @@
                                         </div>
                                     </div>
                                     <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#assignUserRolesModal-{{ $user->id }}">
-                                        Assign
+                                        {{ __('buttons.assign') }}
                                     </button>
                                 </li>
 
@@ -47,7 +47,7 @@
 
                                                 <div class="modal-body">
                                                     <div class="mb-3">
-                                                        <div class="form-label mb-1">Currently assigned</div>
+                                                        <div class="form-label mb-1">{{ __('users.currently-assigned') }}</div>
                                                         @php($selected = $user->roles->pluck('id')->all())
                                                         @if(count($selected))
                                                             @foreach($user->roles as $r)
@@ -59,7 +59,7 @@
                                                     </div>
 
                                                     <div class="mb-2">
-                                                        <div class="form-label mb-2">Assign / unassign roles</div>
+                                                        <div class="form-label mb-2">{{ __('users.assign-roles') }}</div>
 
                                                         <div class="border rounded p-2" style="max-height: 260px; overflow: auto;">
                                                             @foreach($roles as $role)
@@ -85,8 +85,8 @@
                                                 </div>
 
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-link" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-success">Save changes</button>
+                                                    <button type="button" class="btn btn-link" data-bs-dismiss="modal">{{ __('buttons.cancel') }}</button>
+                                                    <button type="submit" class="btn btn-success">{{ __('buttons.save') }}</button>
                                                 </div>
                                             </form>
                                         </div>

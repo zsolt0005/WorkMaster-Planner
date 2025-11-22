@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Permissions;
 use App\Services\Router\Attributes\Get;
 use App\Services\Router\Attributes\Post;
 use Illuminate\Contracts\View\View;
@@ -18,6 +19,8 @@ class RoleController extends AController
     #[Get('/people-management/roles', 'roles')]
     public function default(): View
     {
+        Gate::authorize(Permissions::VIEW_ROLE);
+
         return view('people-management.roles', [
             'roles' => Role::with('permissions')->orderBy('role_name')->get(),
         ]);
@@ -29,7 +32,7 @@ class RoleController extends AController
     #[Post('/people-management/create-role', 'create_role')]
     public function createRole(Request $request): RedirectResponse
     {
-        Gate::authorize('create_role');
+        Gate::authorize(Permissions::CREATE_ROLE);
 
         Log::info('POST create role');
         $data = $request->validate([
@@ -50,6 +53,8 @@ class RoleController extends AController
     #[Post('/people-management/update-role/{role}', 'update_role')]
     public function updateRole(Request $request, Role $role): RedirectResponse
     {
+        Gate::authorize(Permissions::EDIT_ROLE);
+
         $data = $request->validate([
             'role_name' => ['required', 'string', 'max:255', "unique:roles,role_name,{$role->id}"],
             'description' => ['nullable', 'string', 'max:255'],
@@ -72,6 +77,8 @@ class RoleController extends AController
     #[Post('/people-management/delete-role/{role}', 'delete_role')]
     public function deleteRole(Request $request, Role $role): RedirectResponse
     {
+        Gate::authorize(Permissions::DELETE_ROLE);
+
         $role->users()->detach();
         $role->permissions()->detach();
 
