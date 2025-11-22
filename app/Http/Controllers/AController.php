@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
 abstract class AController
@@ -32,5 +34,16 @@ abstract class AController
         $flashes[] = ['type' => $type, 'message' => $message];
 
         Session::flash('flash', $flashes);
+    }
+
+    protected function getAuthUser(): User
+    {
+        /** @var User|null $user */
+        $user = auth()->user();
+        if($user === null) {
+            Redirect::route('login');
+        }
+
+        return $user;
     }
 }

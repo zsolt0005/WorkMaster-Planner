@@ -5,12 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 /**
+ * @property int $id
  * @property string $username
  * @property string $full_name
  * @property string $email
  * @property string $password
+ *
+ * @property Role[] $roles
  */
 final class User extends Authenticatable
 {
@@ -24,8 +29,8 @@ final class User extends Authenticatable
 
     /**
      * The attributes that are mass assignable.
-     * *
-     * * @var list<string>
+     *
+     * @var list<string>
      */
     protected $fillable = [
         'username',
@@ -64,5 +69,10 @@ final class User extends Authenticatable
     public function hasPermission(string $permission): bool
     {
         return $this->roles()->whereHas('permissions', fn ($q) => $q->where('perm_name', $permission))->exists();
+    }
+
+    public function comparePassword(string $password): bool
+    {
+        return Auth::attempt([self::USERNAME => $this->username, self::PASSWORD => $password]);
     }
 }

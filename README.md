@@ -9,7 +9,6 @@
   - `npm run build` - Rebuild js and css files (Všetky zmeny v resources/css a resources/js su viditelne po spusteni) 
   - `composer pint` - **Overenie rules pre štýl kódu:** **(V pipeline)**
   - `composer stan` - **Statická analýza kódu:** **(V pipeline)**
-  - `composer stan -- --memory-limit=512M`
   - `composer tests` - Pustenie všetkých testov **(V pipeline)**
 
 ### Database commands
