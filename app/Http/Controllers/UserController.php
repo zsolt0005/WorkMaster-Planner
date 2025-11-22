@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Permissions;
 use App\Services\Router\Attributes\Get;
 use App\Services\Router\Attributes\Post;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends AController
@@ -28,6 +30,8 @@ class UserController extends AController
     #[Post('/people-management/user-role', 'assign_roles')]
     public function assignRoles(Request $request): RedirectResponse
     {
+        Gate::authorize(Permissions::ASSIGN_ROLE);
+
         $data = $request->validate([
             'user_id' => ['required', 'integer', 'exists:users,id'],
             'role_ids' => ['sometimes', 'array'],
