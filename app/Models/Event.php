@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use DateMalformedStringException;
 use DateTimeImmutable;
-use DateTimeInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $description
  * @property string $start_date_time
  * @property string $end_date_time
- *
  * @property EventType $eventType
  * @property User $assignedUser
  * @property User $createdByUser
@@ -25,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Event extends Model
 {
     public const string START_DATE_TIME = 'start_date_time';
+
     public const string END_DATE_TIME = 'end_date_time';
 
     /**
@@ -45,46 +45,44 @@ class Event extends Model
     /**
      * @return Collection<int, Event>
      */
-    public static function getBetweenDates(DateTimeInterface $startDate, DateTimeInterface $endDate): Collection
+    public static function getBetweenDates(DateTimeImmutable $startDate, DateTimeImmutable $endDate): Collection
     {
-        $startDate = $startDate->setTime(0, 0, 0);
-        $endDate = $endDate->setTime(23, 59, 59);
+
+        $startDateFilter = $startDate->setTime(0, 0, 0);
+        $endDateFilter = $endDate->setTime(23, 59, 59);
 
         return self::query()
-            ->whereBetween(self::START_DATE_TIME, [$startDate, $endDate])
-            ->orWhereBetween(self::END_DATE_TIME, [$startDate, $endDate])
+            ->whereBetween(self::START_DATE_TIME, [$startDateFilter, $endDateFilter])
+            ->orWhereBetween(self::END_DATE_TIME, [$startDateFilter, $endDateFilter])
             ->get();
     }
 
-    /**
-     * @return BelongsTo<EventType, Event>
-     */
     public function eventType(): BelongsTo
     {
         return $this->belongsTo(EventType::class, 'event_type_id');
     }
 
-    /**
-     * @return BelongsTo<User, Event>
-     */
     public function assignedUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_user_id');
     }
 
-    /**
-     * @return BelongsTo<User, Event>
-     */
     public function createdByUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_user_id');
     }
 
+    /**
+     * @throws DateMalformedStringException
+     */
     public function getStartDateTime(): DateTimeImmutable
     {
         return new DateTimeImmutable($this->start_date_time);
     }
 
+    /**
+     * @throws DateMalformedStringException
+     */
     public function getEndDateTime(): DateTimeImmutable
     {
         return new DateTimeImmutable($this->end_date_time);

@@ -12,6 +12,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Nette\Utils\Arrays;
 use RuntimeException;
+use Throwable;
 
 final class CalendarController extends AController
 {
@@ -82,11 +83,16 @@ final class CalendarController extends AController
         $firstDay = Arrays::first($dayEntries)->dateTime;
         $lastDay = Arrays::last($dayEntries)->dateTime;
 
-        $events = Event::getBetweenDates($firstDay, $lastDay);
-
         $eventsData = [];
-        foreach ($events as $event) {
-            $eventsData[] = new CalendarEvent($event);
+
+        try {
+            $events = Event::getBetweenDates($firstDay, $lastDay);
+
+            foreach ($events as $event) {
+                $eventsData[] = new CalendarEvent($event);
+            }
+        } catch (Throwable $e) {
+            return []; // Should never happen, but just in case
         }
 
         return $eventsData;

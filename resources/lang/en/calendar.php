@@ -7,5 +7,5 @@ return [
 
         'create_event' => 'Create event',
         'refresh' => 'Refresh',
-    ]
+    ],
 ];

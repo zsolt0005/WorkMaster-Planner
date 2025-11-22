@@ -3,14 +3,19 @@
 namespace App\Dto;
 
 use App\Models\Event;
+use DateMalformedStringException;
 use DateTimeImmutable;
 use Throwable;
 
 final class CalendarEvent
 {
     public readonly DateTimeImmutable $dateTimeFrom;
+
     public readonly DateTimeImmutable $dateTimeTo;
 
+    /**
+     * @throws DateMalformedStringException
+     */
     public function __construct(public Event $event)
     {
         $this->dateTimeFrom = $this->event->getStartDateTime();
