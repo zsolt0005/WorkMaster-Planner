@@ -26,7 +26,7 @@
             @if(!empty($flashes))
                 <div class="container pt-2">
                     @foreach(session('flash', []) as $flash)
-                        <div class="alert alert-{{ $flash['type'] }}">{{ $flash['message'] }}</div>
+                        <div class="alert alert-{{ $flash['type'] }}">{!! $flash['message'] !!}</div>
                     @endforeach
                 </div>
             @endif

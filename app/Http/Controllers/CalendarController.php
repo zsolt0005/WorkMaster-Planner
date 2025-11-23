@@ -4,22 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Dto\CalendarEvent;
 use App\Dto\DateEntry;
+use App\Models\Event;
 use App\Services\Router\Attributes\Get;
 use DateMalformedStringException;
 use DateTimeImmutable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
+use Nette\Utils\Arrays;
 use RuntimeException;
+use Throwable;
 
 final class CalendarController extends AController
 {
+    private const array VIEW_TYPES = ['month', 'week', 'day'];
+
+    private const string DEFAULT_VIEW_TYPE = 'week';
+
     #[Get('/', 'calendar')]
-    public function default(): View
+    public function default(Request $request): View
     {
-        // TODO [WP-6] getTimePeriod should get the selected time period by user and return data accordingly
-        $dayEntries = $this->getCalendarDayEntries();
+        $viewType = $this->getViewType($request);
+
+        $dayEntries = $this->getCalendarDayEntries($viewType);
         $events = $this->getEventsForDays($dayEntries);
 
         return view('calendar', [
+            'viewType' => $viewType,
             'dayEntries' => $dayEntries,
             'events' => $events,
         ]);
@@ -28,19 +38,33 @@ final class CalendarController extends AController
     /**
      * @return DateEntry[]
      */
-    private function getCalendarDayEntries(): array
+    private function getCalendarDayEntries(string $viewType): array
     {
         try {
             $today = new DateTimeImmutable('today');
 
-            // ISO-8601: N = 1 (Mon) .. 7 (Sun)
-            $isoDay = (int) $today->format('N');
-            $monday = $today->modify(sprintf('-%d day', $isoDay - 1));
+            switch ($viewType) {
+                case 'day':
+                    $startDate = $today;
+                    $daysCount = 1;
+                    break;
+
+                case 'month':
+                    $startDate = $today->modify('first day of this month');
+                    $daysCount = (int) $today->format('t');
+                    break;
+
+                case 'week':
+                default:
+                    $isoDay = (int) $today->format('N');
+                    $startDate = $today->modify(sprintf('-%d day', $isoDay - 1));
+                    $daysCount = 7;
+                    break;
+            }
 
             $days = [];
-            for ($i = 0; $i < 7; $i++) {
-                $date = $monday->modify(sprintf('+%d days', $i));
-
+            for ($i = 0; $i < $daysCount; $i++) {
+                $date = $startDate->modify(sprintf('+%d days', $i));
                 $days[] = new DateEntry($date, $today);
             }
 
@@ -51,14 +75,33 @@ final class CalendarController extends AController
     }
 
     /**
-     * @param  DateEntry[]  $dayEntries
+     * @param  non-empty-array<DateEntry>  $dayEntries
      * @return CalendarEvent[]
      */
     private function getEventsForDays(array $dayEntries): array
     {
-        return [
-            new CalendarEvent('Event 1', $dayEntries[0]->dateTime->setTime(23, 00), $dayEntries[1]->dateTime->setTime(3, 30)),
-            // new CalendarEvent('Event 2', $dayEntries[0]->dateTime->setTime(11, 00), $dayEntries[0]->dateTime->setTime(11, 30)),
-        ];
+        $firstDay = Arrays::first($dayEntries)->dateTime;
+        $lastDay = Arrays::last($dayEntries)->dateTime;
+
+        $eventsData = [];
+
+        try {
+            $events = Event::getBetweenDates($firstDay, $lastDay);
+
+            foreach ($events as $event) {
+                $eventsData[] = new CalendarEvent($event);
+            }
+        } catch (Throwable $e) {
+            return []; // Should never happen, but just in case
+        }
+
+        return $eventsData;
+    }
+
+    private function getViewType(Request $request): string
+    {
+        $viewType = $request->query('view', self::DEFAULT_VIEW_TYPE);
+
+        return in_array($viewType, self::VIEW_TYPES, true) ? $viewType : self::DEFAULT_VIEW_TYPE;
     }
 }
