@@ -6,9 +6,11 @@ use App\Dto\CalendarEvent;
 use App\Dto\DateEntry;
 use App\Models\Event;
 use App\Services\Router\Attributes\Get;
+use App\Services\Router\Attributes\Post;
 use DateMalformedStringException;
 use DateTimeImmutable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Nette\Utils\Arrays;
 use RuntimeException;
@@ -28,11 +30,18 @@ final class CalendarController extends AController
         $dayEntries = $this->getCalendarDayEntries($viewType);
         $events = $this->getEventsForDays($dayEntries);
 
-        return view('calendar', [
+        return view('calendar.calendar', [
             'viewType' => $viewType,
             'dayEntries' => $dayEntries,
             'events' => $events,
         ]);
+    }
+
+    #[Post('/calendar/event/create', 'calendar__event__create')]
+    public function createEvent(Request $request): RedirectResponse
+    {
+        $this->flashSuccess(__('calendar.create_event.success'));
+        return redirect()->route('calendar');
     }
 
     /**
