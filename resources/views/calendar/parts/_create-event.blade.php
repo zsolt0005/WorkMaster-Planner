@@ -33,13 +33,13 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label" for="create_event__assigned_user_id">{{ __('calendar.create_assigned_user_id') }}</label>
+                        <label class="form-label" for="create_event__assigned_user_id">{{ __('calendar.create_event.assigned_user') }}</label>
                         <input type="text" id="create_event__assigned_user_id" name="create_event__assigned_user_id"
                                data-tagify-enabled="true"
                                data-tagify-config='{"url": "{{ route('users_search') }}", "mode": "select", "enforceWhitelist": true, "maxItems": 15}'
                                value="{{ old('create_event__assigned_user_id') }}"
                                class="form-control @error('create_event__assigned_user_id') is-invalid @enderror"
-                               placeholder="{{ __('calendar.create_event.assigned_user_id_placeholder') }}">
+                               placeholder="{{ __('calendar.create_event.assigned_user_placeholder') }}">
                     </div>
 
                     <div class="mb-3">
