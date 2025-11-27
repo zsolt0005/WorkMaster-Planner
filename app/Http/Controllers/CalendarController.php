@@ -14,14 +14,12 @@ use DateTimeImmutable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Nette\Utils\Arrays;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use RuntimeException;
-use Symfony\Component\VarDumper\VarDumper;
 use Throwable;
 
 final class CalendarController extends AController
@@ -29,10 +27,6 @@ final class CalendarController extends AController
     private const array VIEW_TYPES = ['month', 'week', 'day'];
 
     private const string DEFAULT_VIEW_TYPE = 'week';
-
-    public function __construct(public readonly Logger $logger)
-    {
-    }
 
     #[Get('/', 'calendar')]
     public function default(Request $request): View
@@ -55,7 +49,7 @@ final class CalendarController extends AController
     #[Post('/calendar/event/create', 'calendar__event__create')]
     public function createEvent(Request $request): RedirectResponse
     {
-        if(! Gate::has(Permissions::CREATE_EVENT)) {
+        if (! Gate::has(Permissions::CREATE_EVENT)) {
             $this->flashError(__('calendar.create_event.cant_create_event'));
 
             return redirect()->route('calendar');
@@ -90,7 +84,7 @@ final class CalendarController extends AController
                     try {
                         $start = Carbon::parse($data['create_event__start_date_time'] ?? null);
                         $end = Carbon::parse($value);
-                    } catch (\Throwable) {
+                    } catch (Throwable) {
                         return; // date rule will handle invalid formats
                     }
 
@@ -117,7 +111,7 @@ final class CalendarController extends AController
             return redirect()->route('calendar');
         }
 
-        if($data['create_event__assigned_user_id'] !== $this->getAuthUser()->id && !Gate::has(Permissions::CREATE_EVENT_FOR_OTHERS)) {
+        if ($data['create_event__assigned_user_id'] !== $this->getAuthUser()->id && ! Gate::has(Permissions::CREATE_EVENT_FOR_OTHERS)) {
             $this->flashError(__('calendar.create_event.cant_create_event_for_other_user'));
 
             return redirect()->route('calendar');
@@ -137,7 +131,6 @@ final class CalendarController extends AController
             $this->flashSuccess(__('calendar.create_event.success'));
         } catch (Throwable $e) {
             $this->flashError(__('calendar.create_event.failed'));
-            $this->logger->error($e);
         }
 
         return redirect()->route('calendar');
@@ -146,7 +139,7 @@ final class CalendarController extends AController
     #[Post('/calendar/event/delete', 'calendar__event__delete')]
     public function deleteEvent(Request $request): RedirectResponse
     {
-        if(! Gate::has(Permissions::DELETE_EVENT)) {
+        if (! Gate::has(Permissions::DELETE_EVENT)) {
             $this->flashError(__('calendar.delete_event.cant_delete_event'));
 
             return redirect()->route('calendar');
@@ -154,14 +147,14 @@ final class CalendarController extends AController
 
         $eventId = $request->get('delete_event__id', null);
         $event = Event::query()->where(Event::ID, $eventId)->first();
-        if($event === null) {
+        if ($event === null) {
             $this->flashWarning(__('calendar.delete_event.event_doesnt_exists'));
 
             return redirect()->route('calendar');
         }
 
         $currentUserId = $this->getAuthUser()->id;
-        if (($currentUserId !== $event->created_by_user_id || $currentUserId !== $event->assigned_user_id) && !Gate::has(Permissions::DELETE_EVENT_FOR_OTHERS)) {
+        if (($currentUserId !== $event->created_by_user_id || $currentUserId !== $event->assigned_user_id) && ! Gate::has(Permissions::DELETE_EVENT_FOR_OTHERS)) {
             $this->flashError(__('calendar.delete_event.cant_delete_event_for_other_user'));
 
             return redirect()->route('calendar');
@@ -172,7 +165,6 @@ final class CalendarController extends AController
             $this->flashSuccess(__('calendar.delete_event.success'));
         } catch (Throwable $e) {
             $this->flashError(__('calendar.delete_event.failed'));
-            $this->logger->error($e);
         }
 
         return redirect()->route('calendar');

@@ -7,9 +7,13 @@ use App\Models\EventType;
 use App\Services\Router\Attributes\Get;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 
 final class EventTypeApiController extends AController
 {
+    /**
+     * @throws InvalidArgumentException
+     */
     #[Get('/api/event-types/search', 'event_types_search')]
     public function search(Request $request): JsonResponse
     {
@@ -19,7 +23,7 @@ final class EventTypeApiController extends AController
             ->where(EventType::IDENTIFIER, 'like', "%{$q}%")
             ->get();
 
-        $output = $eventTypes->map(static fn(EventType $eventType) => ['value' => $eventType->identifier]);
+        $output = $eventTypes->map(static fn (EventType $eventType) => ['value' => $eventType->identifier]);
 
         return new JsonResponse($output);
     }
