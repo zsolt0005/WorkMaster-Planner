@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Dto\CalendarEvent;
 use App\Dto\DateEntry;
 use App\Models\Event;
+use App\Permissions;
 use App\Services\Router\Attributes\Get;
 use App\Services\Router\Attributes\Post;
 use Carbon\Carbon;
@@ -14,6 +15,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Log\Logger;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Nette\Utils\Arrays;
 use Nette\Utils\Json;
@@ -53,6 +55,12 @@ final class CalendarController extends AController
     #[Post('/calendar/event/create', 'calendar__event__create')]
     public function createEvent(Request $request): RedirectResponse
     {
+        if(! Gate::has(Permissions::CREATE_EVENT)) {
+            $this->flashError(__('calendar.create_event.cant_create_event'));
+
+            return redirect()->route('calendar');
+        }
+
         $data = $request->all();
 
         $data['create_event__event_type_id'] = Json::decode($data['create_event__event_type_id'] ?? '{}', true)[0]['value'] ?? null;
@@ -105,6 +113,12 @@ final class CalendarController extends AController
 
         if ($validator->fails()) {
             $this->flashError($validator->errors()->first());
+
+            return redirect()->route('calendar');
+        }
+
+        if($data['create_event__assigned_user_id'] !== $this->getAuthUser()->id && !Gate::has(Permissions::CREATE_EVENT_FOR_OTHERS)) {
+            $this->flashError(__('calendar.create_event.cant_create_event_for_other_user'));
 
             return redirect()->route('calendar');
         }

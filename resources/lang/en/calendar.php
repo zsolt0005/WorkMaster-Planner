@@ -6,6 +6,7 @@ return [
         'other' => 'Other',
 
         'create_event' => 'Create event',
+        'delete_event' => 'Delete event',
         'refresh' => 'Refresh',
     ],
 
@@ -25,5 +26,7 @@ return [
         'end_date_time' => 'End',
         'success' => 'Event created successfully.',
         'failed' => 'Something went wrong while creating event.',
+        'cant_create_event' => 'You have no permission to create events.',
+        'cant_create_event_for_other_user' => ' You have no permission to create events for other users.',
     ],
 ];

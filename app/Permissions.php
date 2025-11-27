@@ -26,5 +26,9 @@ final class Permissions
 
     public const string EDIT_CALENDAR_SETTINGS = 'edit_calendar_settings';
 
+    public const string CREATE_EVENT = 'create_event';
+
+    public const string CREATE_EVENT_FOR_OTHERS = 'create_event_for_others';
+
     private function __construct() {}
 }
