@@ -3,7 +3,7 @@ export class CalendarContextMenu {
      * @param {Object} options
      * @param {HTMLElement} options.calendarElement - container that receives contextmenu events
      * @param {HTMLElement} options.menuElement - the context menu element
-     * @param {Map<string, CallableFunction<HTMLElement>|string>} options.menu
+     * @param {Map<string, CalendarContextMenuItem|string>} options.menu
      */
     constructor({ calendarElement, menuElement, menu }) {
         if (!calendarElement) {
@@ -22,6 +22,7 @@ export class CalendarContextMenu {
         this.calendarElement = calendarElement;
         this.menuElement = menuElement;
         this.menu = menu;
+        this.menuItemToVisibilityCheckMap = new Map();
         this.contextTarget = null; // the element that was right-clicked
 
         this._onContextMenu = this._onContextMenu.bind(this);
@@ -87,13 +88,15 @@ export class CalendarContextMenu {
         this.menu.forEach((value, key) => {
             const listItem = document.createElement('li');
 
-            if(key.startsWith('--spacer--')) {
+            if(typeof value === 'string') {
                 listItem.classList.add('calendar-context-menu-spacer');
                 listItem.innerHTML = `${value}`;
             } else {
                 listItem.classList.add('calendar-context-action');
                 listItem.innerHTML = `${key}`;
-                listItem.addEventListener('click', () => {value(this.contextTarget)})
+                listItem.addEventListener('click', () => { value.handle(this.contextTarget, listItem) })
+
+                this.menuItemToVisibilityCheckMap.set(listItem, value);
             }
 
             menuList.appendChild(listItem);
@@ -114,6 +117,7 @@ export class CalendarContextMenu {
 
         this.contextTarget = event.target;
         this._showMenuAt(event.clientX, event.clientY);
+        this._computeVisibility()
     }
 
     _onDocumentClick(event) {
@@ -161,9 +165,34 @@ export class CalendarContextMenu {
         this.menuElement.style.top = `${top}px`;
     }
 
+    _computeVisibility() {
+        this.menuItemToVisibilityCheckMap.forEach((value, key) => {
+            value.isVisible(this.contextTarget)
+                ? key.classList.remove('d-none')
+                : key.classList.add('d-none');
+        })
+    }
+
     _hideMenu() {
         if (!this.menuElement.classList.contains('d-none')) {
             this.menuElement.classList.add('d-none');
         }
+    }
+}
+
+export class CalendarContextMenuItem {
+    /**
+     * @param {HTMLElement} element - The calendar cell / event element
+     * @param {HTMLElement} contextMenuItemElement - The clicked menu item element
+     */
+    handle(element, contextMenuItemElement) {
+    }
+
+    /**
+     * @param {HTMLElement} element - The calendar cell / event element
+     * @returns {boolean}
+     */
+    isVisible(element) {
+        return false
     }
 }
