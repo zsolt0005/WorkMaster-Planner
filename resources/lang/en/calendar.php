@@ -27,6 +27,16 @@ return [
         'success' => 'Event created successfully.',
         'failed' => 'Something went wrong while creating event.',
         'cant_create_event' => 'You have no permission to create events.',
-        'cant_create_event_for_other_user' => ' You have no permission to create events for other users.',
+        'cant_create_event_for_other_user' => 'You have no permission to create events for other users.',
+    ],
+
+    'delete_event' => [
+        'header' => 'Delete event',
+        'confirm' => 'Are you sure you want to delete this event?',
+        'event_doesnt_exists' => 'The event you are trying to delete doesn\'t exist.',
+        'cant_delete_event' => 'You have no permission to delete events.',
+        'cant_delete_event_for_other_user' => 'You have no permission to delete events for other users.',
+        'success' => 'Event deleted successfully.',
+        'failed' => 'Something went wrong while deleting event.',
     ],
 ];

@@ -143,6 +143,41 @@ final class CalendarController extends AController
         return redirect()->route('calendar');
     }
 
+    #[Post('/calendar/event/delete', 'calendar__event__delete')]
+    public function deleteEvent(Request $request): RedirectResponse
+    {
+        if(! Gate::has(Permissions::DELETE_EVENT)) {
+            $this->flashError(__('calendar.delete_event.cant_delete_event'));
+
+            return redirect()->route('calendar');
+        }
+
+        $eventId = $request->get('delete_event__id', null);
+        $event = Event::query()->where(Event::ID, $eventId)->first();
+        if($event === null) {
+            $this->flashWarning(__('calendar.delete_event.event_doesnt_exists'));
+
+            return redirect()->route('calendar');
+        }
+
+        $currentUserId = $this->getAuthUser()->id;
+        if (($currentUserId !== $event->created_by_user_id || $currentUserId !== $event->assigned_user_id) && !Gate::has(Permissions::DELETE_EVENT_FOR_OTHERS)) {
+            $this->flashError(__('calendar.delete_event.cant_delete_event_for_other_user'));
+
+            return redirect()->route('calendar');
+        }
+
+        try {
+            $event->delete();
+            $this->flashSuccess(__('calendar.delete_event.success'));
+        } catch (Throwable $e) {
+            $this->flashError(__('calendar.delete_event.failed'));
+            $this->logger->error($e);
+        }
+
+        return redirect()->route('calendar');
+    }
+
     /**
      * @return DateEntry[]
      */
