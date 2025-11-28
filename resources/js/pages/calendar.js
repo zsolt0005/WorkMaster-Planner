@@ -1,6 +1,14 @@
 import { CalendarContextMenu } from './../Components/CalendarContextMenu.js';
+import { CreateEventMenuItem } from './calendar/_create-event.js'
+import { DeleteEventMenuItem } from './calendar/_delete-event.js'
+import { RefreshEventMenuItem } from './calendar/_refresh-event.js'
 
 window.menuItems ??= new Map();
+const handlers = {
+    createEvent: new CreateEventMenuItem(),
+    deleteEvent: new DeleteEventMenuItem(),
+    refreshEvent: new RefreshEventMenuItem(),
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     const calendarElement = document.getElementById('calendar');
@@ -28,21 +36,10 @@ function getContextMenuItems() {
         if (key.startsWith('--spacer--')) {
             menu.set(key, value);
         } else {
-            const fn = typeof window[value] === 'function' ? window[value] : null;
+            const fn = handlers[value] ?? null;
             menu.set(key, fn);
         }
     })
 
     return menu;
 }
-
-
-/** ---*---*---HANDLERS---*---*--- **/
-
-window.createEventHandler = (element) => {
-    console.log(element);
-};
-
-window.refreshEventHandler = () => {
-    window.location.reload();
-};

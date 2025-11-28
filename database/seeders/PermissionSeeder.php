@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Permissions;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -20,74 +21,41 @@ final class PermissionSeeder extends Seeder
 
     private function createRolePermissions(): void
     {
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'create_role',
-            'description' => 'Allows to create roles',
-        ]);
-
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'edit_role',
-            'description' => 'Allows to edit roles',
-        ]);
-
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'delete_role',
-            'description' => 'Allows to delete roles',
-        ]);
-
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'view_role',
-            'description' => 'Allows to view roles',
-        ]);
-
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'assign_role',
-            'description' => 'Allows to assign role to user',
-        ]);
+        $this->createPermission('create_role', 'Allows to create roles');
+        $this->createPermission('edit_role', 'Allows to edit roles');
+        $this->createPermission('delete_role', 'Allows to delete roles');
+        $this->createPermission('view_role', 'Allows to view roles');
+        $this->createPermission('assign_role', 'Allows to assign role to user');
     }
 
     private function createPermissionsPermissions(): void
     {
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'create_permission',
-            'description' => 'Allows to create permissions',
-        ]);
-
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'edit_permission',
-            'description' => 'Allows to edit permissions',
-        ]);
-
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'delete_permission',
-            'description' => 'Allows to delete permissions',
-        ]);
-
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'view_permission',
-            'description' => 'Allows to view permissions',
-        ]);
-
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'assign_permission',
-            'description' => 'Allows to assign permission to role',
-        ]);
+        $this->createPermission('create_permission', 'Allows to create permissions');
+        $this->createPermission('edit_permission', 'Allows to edit permissions');
+        $this->createPermission('delete_permission', 'Allows to delete permissions');
+        $this->createPermission('view_permission', 'Allows to view permissions');
+        $this->createPermission('assign_permission', 'Allows to assign permission to role');
     }
 
     private function createCalendarPermissions(): void
     {
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'edit_calendar_settings',
-            'description' => 'Allows to view and modify calendar settings',
-        ]);
+        $this->createPermission(Permissions::EDIT_CALENDAR_SETTINGS, 'Allows to view and modify calendar settings');
+        $this->createPermission(Permissions::CREATE_EVENT, 'Allows creating events');
+        $this->createPermission(Permissions::CREATE_EVENT_FOR_OTHERS, 'Allows creating events for other users');
+        $this->createPermission(Permissions::DELETE_EVENT, 'Allows deleting events');
+        $this->createPermission(Permissions::DELETE_EVENT_FOR_OTHERS, 'Allows deleting events for other users');
     }
 
     private function createUsersPermissions(): void
     {
-        DB::table('permissions')->insertOrIgnore([
-            'perm_name' => 'edit_profile_data',
-            'description' => 'Allows user to edit profile information\'s',
-        ]);
+        $this->createPermission('edit_profile_data', 'Allows user to edit profile information\'s');
+    }
 
+    private function createPermission(string $name, string $description): void
+    {
+        DB::table('permissions')->insertOrIgnore([
+            'perm_name' => $name,
+            'description' => $description,
+        ]);
     }
 }

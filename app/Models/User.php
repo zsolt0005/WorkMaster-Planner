@@ -21,6 +21,8 @@ final class User extends Authenticatable
 
     public const string USERNAME = 'username';
 
+    public const string FULL_NAME = 'full_name';
+
     public const string EMAIL = 'email';
 
     public const string PASSWORD = 'password';

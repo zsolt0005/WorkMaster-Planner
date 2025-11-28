@@ -131,8 +131,8 @@
                             <div class="calendar-day-body">
                                 <div class="time-slots">
                                     @for($hour = 0; $hour <= 23; $hour++)
-                                        <div class="time-slot text-center fw-light border-bottom pb-2" style="grid-row: {{ ($hour * 60) + 1 }} / span 30"></div>
-                                        <div class="time-slot text-center fw-light border-bottom border-dark pb-2" style="grid-row: {{ ($hour * 60) + 30 + 1 }} / span 30"></div>
+                                        <div class="time-slot text-center fw-light border-bottom pb-2" style="grid-row: {{ ($hour * 60) + 1 }} / span 30" data-time="{{ $dayEntry->getDate() . ' ' . sprintf('%02d:00', $hour) }}"></div>
+                                        <div class="time-slot text-center fw-light border-bottom border-dark pb-2" style="grid-row: {{ ($hour * 60) + 30 + 1 }} / span 30" data-time="{{ $dayEntry->getDate() . ' ' . sprintf('%02d:30', $hour) }}"></div>
                                     @endfor
                                 </div>
 
@@ -163,7 +163,10 @@
                                         <div class="event"
                                              style="grid-row: {{ $startPosition + 1 }} / span {{ $offset }}; max-height: {{ $occupiedSpace * 33 }}px !important;"
                                              data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $event->event->title }}">
-                                            <div class="card card-body mx-2 p-2 small align-items-stretch event-{{ $event->event->id }} h-100 d-flex flex-column">
+                                            <div class="card card-body mx-2 p-2 small align-items-stretch event-{{ $event->event->id }} h-100 d-flex flex-column"
+                                                 data-event_id="{{ $event->event->id }}"
+                                                 data-time="{{ $event->event->getStartDateTime()->format('Y-m-d H:i') }}"
+                                            >
                                                 <div class="event-title" style="color: {{ $event->getTextColor() }}; @if($occupiedSpace < 2) font-size: 0.75rem; @endif">
                                                     {{ $event->event->title }}
                                                 </div>
@@ -202,17 +205,22 @@
         </div>
     </div>
 
+
     @include('parts._context_menu')
+    @include('calendar.parts._create-event')
+    @include('calendar.parts._delete-event')
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const menuItems = new Map();
             menuItems
                 .set('--spacer--main', '{{ __('calendar.context_menu.actions') }}')
-                .set('{{ __('calendar.context_menu.create_event') }}', 'createEventHandler')
+                .set('{{ __('calendar.context_menu.create_event') }}', 'createEvent')
+                .set('{{ __('calendar.context_menu.delete_event') }}', 'deleteEvent')
 
                 .set('--spacer--other', '{{ __('calendar.context_menu.other') }}')
-                .set('{{ __('calendar.context_menu.refresh') }}', 'refreshEventHandler')
+                .set('{{ __('calendar.context_menu.refresh') }}', 'refreshEvent')
 
             window.menuItems = menuItems;
         })

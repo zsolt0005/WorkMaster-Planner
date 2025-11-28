@@ -9,9 +9,11 @@
         "axios": "^1.9.0",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.2.0",
+        "sass-embedded": "^1.93.3",
         "vite": "^6.3.4"
     },
     "dependencies": {
+        "@yaireo/tagify": "^4.35.6",
         "fast-glob": "^3.3.3"
     }
 }

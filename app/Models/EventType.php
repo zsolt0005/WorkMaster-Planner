@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class EventType extends Model
 {
+    public const string IDENTIFIER = 'identifier';
+
     protected $primaryKey = 'identifier';
 
     protected $keyType = 'string';

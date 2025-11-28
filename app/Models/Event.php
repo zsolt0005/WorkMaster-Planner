@@ -23,6 +23,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Event extends Model
 {
+    public const string ID = 'id';
+
     public const string START_DATE_TIME = 'start_date_time';
 
     public const string END_DATE_TIME = 'end_date_time';
