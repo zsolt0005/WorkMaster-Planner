@@ -48,4 +48,29 @@ class UserController extends AController
 
         return back();
     }
+
+    // gregorik
+    /**
+     * @throws ValidationException
+     */
+    #[Post('/people-management/users', 'create_user')]
+    public function store(Request $request): RedirectResponse
+    {
+        Gate::authorize(Permissions::CREATE_USER); 
+
+        $data = $request->validate([
+            'username' => ['required', 'string', 'max:50', 'unique:users,username'],
+            'full_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,' . User::EMAIL, 'max:255'],
+            'password' => ['required', 'confirmed', 'min:8'], 
+        ]);
+
+        User::create($data);
+
+        $this->flashSuccess('User created.');
+
+        
+        return back();
+    }
+    // gregorik
 }

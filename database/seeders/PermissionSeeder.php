@@ -49,6 +49,7 @@ final class PermissionSeeder extends Seeder
     private function createUsersPermissions(): void
     {
         $this->createPermission('edit_profile_data', 'Allows user to edit profile information\'s');
+        $this->createPermission(Permissions::CREATE_USER, 'Allows to create users');
     }
 
     private function createPermission(string $name, string $description): void

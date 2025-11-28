@@ -4,6 +4,8 @@ namespace App;
 
 final class Permissions
 {
+    public const string CREATE_USER = 'create_user';
+
     public const string CREATE_ROLE = 'create_role';
 
     public const string EDIT_ROLE = 'edit_role';
