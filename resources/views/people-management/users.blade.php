@@ -17,63 +17,57 @@
                 <div class="card shadow-sm">
                     <!-- GREGORIK, later delete -->
                     <div class="card-body">
-                        <h2 class="h5 mb-3">Create New User</h2>
+                        <h2 class="h5 mb-3">{{ __('users.headers.create-user') }}</h2>
 
                         <form method="POST" action="{{ route('create_user') }}" novalidate>
                             @csrf
 
-                            {{-- 1. Užívateľské Meno (USERNAME) --}}
                             <div class="mb-3">
-                                <label class="form-label" for="username">Užívateľské Meno</label>
+                                <label class="form-label" for="username">{{ __('users.forms.name') }}</label>
                                 <input type="text" id="username" name="username"
                                        value="{{ old('username') }}"
-                                       class="form-control @error('username') is-invalid @enderror"
+                                       class="form-control @error('username') is-invalid @enderror" placeholder="username123"
                                        required>
                                 @error('username') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 
-                            {{-- 2. Celé Meno (FULL_NAME) --}}
                             <div class="mb-3">
-                                <label class="form-label" for="full_name">Celé Meno</label>
+                                <label class="form-label" for="full_name">{{ __('users.forms.full-name') }}</label>
                                 <input type="text" id="full_name" name="full_name"
                                        value="{{ old('full_name') }}"
-                                       class="form-control @error('full_name') is-invalid @enderror"
+                                       class="form-control @error('full_name') is-invalid @enderror" placeholder="John Doe"
                                        required>
                                 @error('full_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 
-                            {{-- 3. E-mail (EMAIL) --}}
                             <div class="mb-3">
-                                <label class="form-label" for="email">E-mail</label>
+                                <label class="form-label" for="email">{{ __('users.forms.email') }}</label>
                                 <input type="email" id="email" name="email"
                                        value="{{ old('email') }}"
-                                       class="form-control @error('email') is-invalid @enderror"
+                                       class="form-control @error('email') is-invalid @enderror" placeholder="johndoe@domain.com"
                                        required>
                                 @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 
-                            {{-- 4. Heslo (PASSWORD) --}}
                             <div class="mb-3">
-                                <label class="form-label" for="password">Heslo</label>
+                                <label class="form-label" for="password">{{ __('users.forms.password') }}</label>
                                 <input type="password" id="password" name="password"
-                                       class="form-control @error('password') is-invalid @enderror"
+                                       class="form-control @error('password') is-invalid @enderror" placeholder="********"
                                        required>
                                 @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 
-                            {{-- 5. Potvrdenie Hesla (PASSWORD_CONFIRMATION) --}}
                             <div class="mb-3">
-                                <label class="form-label" for="password_confirmation">Potvrdenie Hesla</label>
+                                <label class="form-label" for="password_confirmation">{{ __('users.forms.password-confirmation') }}</label>
                                 <input type="password" id="password_confirmation" name="password_confirmation"
-                                       class="form-control"
+                                       class="form-control" placeholder="********"
                                        required>
                             </div>
 
                             <button class="btn btn-primary">Create User</button>
                         </form>
                     </div>
-                    <!-- GREGORIK, later delete -->
-
+                    
                     <div class="card-body">
                         <h2 class="h4 mb-3">{{ __('users.headers.users') }}</h2>
 
