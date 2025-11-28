@@ -39,4 +39,8 @@ return [
         'success' => 'Event deleted successfully.',
         'failed' => 'Something went wrong while deleting event.',
     ],
+
+    'event_type' => 'Event type',
+    'user' => 'User / Name',
+    'type_to_search' => 'Type to search...',
 ];

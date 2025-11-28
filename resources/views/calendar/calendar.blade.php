@@ -26,9 +26,10 @@
                     <div class="row align-items-center">
                         <div class="col-auto">
                             <div class="input-group mb-3">
-                                <a href="{{ route('calendar', ['view' => 'day']) }}" class="btn {{ $viewType === 'day' ? 'btn-primary' : 'btn-outline-secondary' }}" type="button">Day</a>
-                                <a href="{{ route('calendar', ['view' => 'week']) }}" class="btn {{ $viewType === 'week' ? 'btn-primary' : 'btn-outline-secondary' }}" type="button">Week</a>
-                                <a href="{{ route('calendar', ['view' => 'month']) }}" class="btn {{ $viewType === 'month' ? 'btn-primary' : 'btn-outline-secondary' }}" type="button">Month</a>
+                                <input type="hidden" name="view" value="{{ $viewType }}">
+                                <a href="{{ request()->fullUrlWithQuery(['view' => 'day']) }}" class="btn {{ $viewType === 'day' ? 'btn-primary' : 'btn-outline-secondary' }}" type="button">Day</a>
+                                <a href="{{ request()->fullUrlWithQuery(['view' => 'week']) }}" class="btn {{ $viewType === 'week' ? 'btn-primary' : 'btn-outline-secondary' }}" type="button">Week</a>
+                                <a href="{{ request()->fullUrlWithQuery(['view' => 'month']) }}" class="btn {{ $viewType === 'month' ? 'btn-primary' : 'btn-outline-secondary' }}" type="button">Month</a>
                             </div>
                         </div>
                     </div>
@@ -43,21 +44,26 @@
 
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text fw-bold">Name / User</span>
-                                <input type="text" class="form-control" id="name_or_user" name="name_or_user" placeholder="Josh">
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text fw-bold">{{ __('calendar.user') }}</span>
+                                <input type="text" id="name_or_user" name="name_or_user"
+                                       data-tagify-enabled="true"
+                                       data-tagify-config='{"url": "{{ route('users_search') }}", "multiple": true, "enforceWhitelist": true, "maxItems": 15, "prefetch": true}'
+                                       value="{{ request('name_or_user') }}"
+                                       class="form-control tagify-fixed"
+                                       placeholder="{{ __('calendar.type_to_search') }}">
                             </div>
                         </div>
 
                         <div class="col-auto">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text fw-bold">Type</span>
-                                <select class="form-select" name="event_type">
-                                    <option selected>All</option>
-                                    <option value="vacation">Vacation</option>
-                                    <option value="work_time">Work time</option>
-                                    <option value="holiday">Holiday</option>
-                                </select>
+                            <div class="input-group input-group-sm mb-3">
+                                <span class="input-group-text fw-bold">{{ __('calendar.event_type') }}</span>
+                                <input type="text" id="event_type" name="event_type"
+                                       data-tagify-enabled="true"
+                                       data-tagify-config='{"url": "{{ route('event_types_search') }}", "multiple": true, "enforceWhitelist": true, "maxItems": 15, "prefetch": true}'
+                                       value="{{ request('event_type') }}"
+                                       class="form-control tagify-fixed"
+                                       placeholder="{{ __('calendar.type_to_search') }}">
                             </div>
                         </div>
                     </div>
@@ -216,8 +222,14 @@
             const menuItems = new Map();
             menuItems
                 .set('--spacer--main', '{{ __('calendar.context_menu.actions') }}')
+
+                @can(Permissions::CREATE_EVENT)
                 .set('{{ __('calendar.context_menu.create_event') }}', 'createEvent')
+                @endcan
+
+                @can(Permissions::DELETE_EVENT)
                 .set('{{ __('calendar.context_menu.delete_event') }}', 'deleteEvent')
+                @endcan
 
                 .set('--spacer--other', '{{ __('calendar.context_menu.other') }}')
                 .set('{{ __('calendar.context_menu.refresh') }}', 'refreshEvent')

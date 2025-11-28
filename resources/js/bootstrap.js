@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const url = config.url ?? null;
         const mode = config.mode ?? 'tags';
+        const prefetch = config.prefetch ?? false;
         const multiple = mode === 'select'
             ? false
             : config.multiple !== undefined
@@ -45,10 +46,11 @@ document.addEventListener('DOMContentLoaded', function () {
             whitelist: [],          // start empty, will be filled from server
         };
 
+        const originalValue = input.value;
         const tagify = new Tagify(input, tagifyOptions);
 
         let controller;
-        async function fetchSuggestions(query) {
+        async function fetchSuggestions(query, showDropdown = true) {
             // cancel previous request (optional)
             if (controller) {
                 controller.abort();
@@ -71,7 +73,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Expecting an array like: [{ value: 'Foo' }, { value: 'Bar' }]
                 tagify.settings.whitelist = await response.json();
-                tagify.dropdown.show.call(tagify, query); // show the suggestions
+
+                if (showDropdown) {
+                    tagify.dropdown.show.call(tagify, query); // show the suggestions
+                }
 
             } catch (err) {
                 if (err.name === 'AbortError') {
@@ -83,11 +88,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (url) {
+            if (prefetch) {
+                fetchSuggestions('', false)
+                    .then(() => {
+                        input.value = originalValue;
+                    })
+            }
+
             tagify.on('input', async (e) => {
                 const value = e.detail.value;
 
                 // ignore short queries
-                if (!value || value.length < (config.minChars ?? 1)) {
+                if (value.length < (config.minChars ?? 0)) {
                     return;
                 }
 
