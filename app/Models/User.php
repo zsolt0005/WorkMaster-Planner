@@ -19,6 +19,8 @@ final class User extends Authenticatable
 {
     use Notifiable;
 
+    public const string ID = 'id';
+
     public const string USERNAME = 'username';
 
     public const string FULL_NAME = 'full_name';

@@ -32,9 +32,10 @@ final class CalendarController extends AController
     public function default(Request $request): View
     {
         $viewType = $this->getViewType($request);
+        $filters = $this->getFilters($request);
 
         $dayEntries = $this->getCalendarDayEntries($viewType);
-        $events = $this->getEventsForDays($dayEntries);
+        $events = $this->getEventsForDays($dayEntries, $filters);
 
         return view('calendar.calendar', [
             'viewType' => $viewType,
@@ -211,9 +212,10 @@ final class CalendarController extends AController
 
     /**
      * @param  non-empty-array<DateEntry>  $dayEntries
+     * @param  array<string, mixed[]>  $filters
      * @return CalendarEvent[]
      */
-    private function getEventsForDays(array $dayEntries): array
+    private function getEventsForDays(array $dayEntries, array $filters): array
     {
         $firstDay = Arrays::first($dayEntries)->dateTime;
         $lastDay = Arrays::last($dayEntries)->dateTime;
@@ -221,9 +223,17 @@ final class CalendarController extends AController
         $eventsData = [];
 
         try {
-            $events = Event::getBetweenDates($firstDay, $lastDay);
+            $eventsQuery = Event::getBetweenDates($firstDay, $lastDay);
 
-            foreach ($events as $event) {
+            foreach ($filters as $column => $values) {
+                if (empty($values)) {
+                    continue;
+                }
+
+                $eventsQuery->whereIn($column, $values);
+            }
+
+            foreach ($eventsQuery->get() as $event) {
                 $eventsData[] = new CalendarEvent($event);
             }
         } catch (Throwable $e) {
@@ -238,5 +248,28 @@ final class CalendarController extends AController
         $viewType = $request->query('view', self::DEFAULT_VIEW_TYPE);
 
         return in_array($viewType, self::VIEW_TYPES, true) ? $viewType : self::DEFAULT_VIEW_TYPE;
+    }
+
+    /**
+     * @return array<string, mixed[]>
+     */
+    private function getFilters(Request $request): array
+    {
+        try {
+            $eventTypes = Json::decode($request->query('event_type', '[]'), true) ?? [];
+        } catch (JsonException) {
+            $eventTypes = [];
+        }
+
+        try {
+            $users = Json::decode($request->query('name_or_user', '[]'), true) ?? [];
+        } catch (JsonException) {
+            $users = [];
+        }
+
+        return [
+            Event::EVENT_TYPE_ID => array_filter(Arrays::map($eventTypes, static fn (array $eventType) => $eventType['value'] ?? '')),
+            Event::ASSIGNED_USER_ID => array_filter(Arrays::map($users, static fn (array $user) => $user['id'] ?? '')),
+        ];
     }
 }

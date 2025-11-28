@@ -4,7 +4,7 @@ namespace App\Models;
 
 use DateMalformedStringException;
 use DateTimeImmutable;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -24,6 +24,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Event extends Model
 {
     public const string ID = 'id';
+
+    public const string EVENT_TYPE_ID = 'event_type_id';
+
+    public const string ASSIGNED_USER_ID = 'assigned_user_id';
 
     public const string START_DATE_TIME = 'start_date_time';
 
@@ -45,18 +49,19 @@ class Event extends Model
     ];
 
     /**
-     * @return Collection<int, Event>
+     * @return Builder<Event>
      */
-    public static function getBetweenDates(DateTimeImmutable $startDate, DateTimeImmutable $endDate): Collection
+    public static function getBetweenDates(DateTimeImmutable $startDate, DateTimeImmutable $endDate): Builder
     {
-
         $startDateFilter = $startDate->setTime(0, 0, 0);
         $endDateFilter = $endDate->setTime(23, 59, 59);
 
         return self::query()
-            ->whereBetween(self::START_DATE_TIME, [$startDateFilter, $endDateFilter])
-            ->orWhereBetween(self::END_DATE_TIME, [$startDateFilter, $endDateFilter])
-            ->get();
+            ->where(function (Builder $query) use ($startDateFilter, $endDateFilter): void {
+                $query
+                    ->whereBetween(self::START_DATE_TIME, [$startDateFilter, $endDateFilter])
+                    ->orWhereBetween(self::END_DATE_TIME, [$startDateFilter, $endDateFilter]);
+            });
     }
 
     public function eventType(): BelongsTo
