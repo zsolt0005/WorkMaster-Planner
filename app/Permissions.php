@@ -6,6 +6,10 @@ final class Permissions
 {
     public const string CREATE_USER = 'create_user';
 
+    public const string EDIT_USER = 'edit_user';
+
+    public const string DELETE_USER = 'delete_user';
+
     public const string CREATE_ROLE = 'create_role';
 
     public const string EDIT_ROLE = 'edit_role';

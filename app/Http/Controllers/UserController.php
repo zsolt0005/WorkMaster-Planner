@@ -49,28 +49,67 @@ class UserController extends AController
         return back();
     }
 
-    // gregorik
     /**
      * @throws ValidationException
      */
     #[Post('/people-management/users', 'create_user')]
-    public function store(Request $request): RedirectResponse
+    public function createUser(Request $request): RedirectResponse
     {
-        Gate::authorize(Permissions::CREATE_USER); 
+        Gate::authorize(Permissions::CREATE_USER);
 
         $data = $request->validate([
             'username' => ['required', 'string', 'max:50', 'unique:users,username'],
             'full_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,' . User::EMAIL, 'max:255'],
-            'password' => ['required', 'confirmed', 'min:8'], 
+            'email' => ['required', 'email', 'unique:users,'.User::EMAIL, 'max:255'],
+            'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
         User::create($data);
 
         $this->flashSuccess('User created.');
 
-        
         return back();
     }
-    // gregorik
+
+    /**
+     * @param Request $request
+     * @param $user
+     * @return RedirectResponse
+     * @throws ValidationException
+     */
+    #[Post('/people-management/users', 'create_user')]
+    public function updateUser(Request $request, $user): RedirectResponse
+    {
+        Gate::authorize(Permissions::EDIT_USER);
+
+        $data = $request->validate([
+            'username' => ['required', 'string', 'max:50', "unique:users,username,{$user->id}"],
+            'full_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,'.User::EMAIL, 'max:255'],
+            'password' => ['required', 'confirmed', 'min:8'],
+        ]);
+
+        $user->update([
+            'username' => $data['username'],
+            'full_name' => $data['full_name'],
+            'email' => $data['email'],
+            'password' => $data['password'] ?? null,
+        ]);
+
+        $this->flashSuccess('User updated successfully.');
+        return back();
+    }
+
+    #[Post('/people-management/users/delete/{user}', 'delete_user')]
+    public function deleteUser(User $user): RedirectResponse
+    {
+        Gate::authorize(Permissions::DELETE_USER);
+
+        $email = $user->email;
+        $user->delete();
+
+        $this->flashSuccess('User '.$email.' successfully deleted.');
+
+        return back();
+    }
 }
