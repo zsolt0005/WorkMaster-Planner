@@ -39,6 +39,7 @@
         <script src="{{ asset('js/bootstrap.bundle.js') }}"></script>
         <script src="{{ asset('js/jquery.sticky.js') }}"></script>
 
+        @vite(['resources/js/pages/dashboard/dashboard.js'])
         @vite(['resources/js/app.js'])
     </body>
 </html>

@@ -20,7 +20,7 @@ final class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             RolePermissionSeeder::class, // Must be run after RoleSeeder and Permission seeder
             UserRoleSeeder::class, // Must be run after UserSeeder and RoleSeeder
-
+            EventsSeeder::class,
             EventTypeSeeder::class,
         ]);
     }
