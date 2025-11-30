@@ -34,5 +34,7 @@ final class Permissions
 
     public const string DELETE_EVENT_FOR_OTHERS = 'delete_event_for_others';
 
+    public const string VIEW_USERS_DASHBOARD = 'view_users_dashboard';
+
     private function __construct() {}
 }

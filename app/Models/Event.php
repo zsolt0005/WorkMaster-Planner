@@ -48,20 +48,9 @@ class Event extends Model
         'end_date_time',
     ];
 
-    /**
-     * @return Builder<Event>
-     */
-    public static function getBetweenDates(DateTimeImmutable $startDate, DateTimeImmutable $endDate): Builder
+    public function type(): BelongsTo
     {
-        $startDateFilter = $startDate->setTime(0, 0, 0);
-        $endDateFilter = $endDate->setTime(23, 59, 59);
-
-        return self::query()
-            ->where(function (Builder $query) use ($startDateFilter, $endDateFilter): void {
-                $query
-                    ->whereBetween(self::START_DATE_TIME, [$startDateFilter, $endDateFilter])
-                    ->orWhereBetween(self::END_DATE_TIME, [$startDateFilter, $endDateFilter]);
-            });
+        return $this->belongsTo(EventType::class, 'event_type_id');
     }
 
     public function eventType(): BelongsTo
@@ -77,6 +66,22 @@ class Event extends Model
     public function createdByUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_user_id');
+    }
+
+    /**
+     * @return Builder<Event>
+     */
+    public static function getBetweenDates(DateTimeImmutable $startDate, DateTimeImmutable $endDate): Builder
+    {
+        $startDateFilter = $startDate->setTime(0, 0, 0);
+        $endDateFilter = $endDate->setTime(23, 59, 59);
+
+        return self::query()
+            ->where(function (Builder $query) use ($startDateFilter, $endDateFilter): void {
+                $query
+                    ->whereBetween(self::START_DATE_TIME, [$startDateFilter, $endDateFilter])
+                    ->orWhereBetween(self::END_DATE_TIME, [$startDateFilter, $endDateFilter]);
+            });
     }
 
     /**
