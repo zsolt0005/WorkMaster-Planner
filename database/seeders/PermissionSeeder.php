@@ -46,6 +46,7 @@ final class PermissionSeeder extends Seeder
         $this->createPermission(Permissions::DELETE_EVENT, 'Allows deleting events');
         $this->createPermission(Permissions::DELETE_EVENT_FOR_OTHERS, 'Allows deleting events for other users');
     }
+
     private function createDashboardPermissions(): void
     {
         $this->createPermission('view_users_dashboard', 'Allows to view other users statistics');
