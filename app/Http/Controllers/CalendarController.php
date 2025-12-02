@@ -6,15 +6,19 @@ use App\Dto\CalendarEvent;
 use App\Dto\DateEntry;
 use App\Models\Event;
 use App\Permissions;
+use App\Services\PublicHolidayService;
 use App\Services\Router\Attributes\Get;
 use App\Services\Router\Attributes\Post;
 use Carbon\Carbon;
 use DateMalformedStringException;
 use DateTimeImmutable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Nette\Utils\Arrays;
 use Nette\Utils\Json;
@@ -28,13 +32,39 @@ final class CalendarController extends AController
 
     private const string DEFAULT_VIEW_TYPE = 'week';
 
+    /**
+     * @throws RequestException
+     * @throws ConnectionException
+     */
     #[Get('/', 'calendar')]
-    public function default(Request $request): View
+    public function default(Request $request, PublicHolidayService $holidayService): View
     {
         $viewType = $this->getViewType($request);
         $filters = $this->getFilters($request);
 
         $dayEntries = $this->getCalendarDayEntries($viewType);
+
+        $country = $request->input('country', 'SK');
+        $from = $request->input('from', now()->startOfYear()->toDateString());
+        $to = $request->input('to', now()->endOfYear()->toDateString());
+        $lang = $request->input('lang', 'EN');
+
+        $created = $holidayService->syncPublicHolidaysToEvents(
+            countryIsoCode: $country,
+            validFrom: $from,
+            validTo: $to,
+            languageIsoCode: $lang,
+            userId: $this->getAuthUser()->id,
+        );
+
+        Log::info('Holidays processed for calendar view', [
+            'country' => $country,
+            'from' => $from,
+            'to' => $to,
+            'lang' => $lang,
+            'created' => $created,
+        ]);
+
         $events = $this->getEventsForDays($dayEntries, $filters);
 
         return view('calendar.calendar', [
