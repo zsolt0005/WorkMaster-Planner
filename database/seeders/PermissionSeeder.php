@@ -50,7 +50,6 @@ final class PermissionSeeder extends Seeder
     {
         $this->createPermission('edit_profile_data', 'Allows user to edit profile information\'s');
         $this->createPermission(Permissions::CREATE_USER, 'Allows to create users');
-//      GREGORIK: Pokus
         $this->createPermission(Permissions::EDIT_USER, 'Allows administrator to edit any user.');
     }
 

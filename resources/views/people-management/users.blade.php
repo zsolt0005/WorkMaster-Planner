@@ -15,7 +15,8 @@
         <div class="row g-4">
             <div class="col-12 col-lg-12">
                 <div class="card shadow-sm">
-                   <div class="card-body">
+                    @can(\App\Permissions::CREATE_USER)
+                    <div class="card-body">
                         <h2 class="h5 mb-3">{{ __('users.headers.create-user') }}</h2>
 
                         <form method="POST" action="{{ route('create_user') }}" novalidate>
@@ -66,6 +67,7 @@
                             <button class="btn btn-primary">Create User</button>
                         </form>
                     </div>
+                    @endcan
 
                     <div class="card-body">
                         <h2 class="h4 mb-3">{{ __('users.headers.users') }}</h2>
@@ -80,16 +82,20 @@
                                             Roles: {{ $user->roles->pluck('role_name')->join(', ') ?: '—' }}
                                         </div>
                                     </div>
-                                    <div class="btn-group" role="group" aria-label="Delete and update of user actions and assigning roles to the users ">
+                                    <div class="btn-group" role="group" aria-label="Deleting and updating user and assigning roles to the users ">
                                         <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#assignUserRolesModal-{{ $user->id }}">
                                             {{ __('buttons.assign') }}
                                         </button>
-                                        <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#editUserModal-{{ $user->id }}">
-                                            {{ __('buttons.edit') }}
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal-{{ $user->id }}">
-                                            {{ __('buttons.delete') }}
-                                        </button>
+                                        @can(\App\Permissions::EDIT_USER)
+                                            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#editUserModal-{{ $user->id }}">
+                                                {{ __('buttons.edit') }}
+                                            </button>
+                                        @endcan
+                                        @can(\App\Permissions::DELETE_USER)
+                                            <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal-{{ $user->id }}">
+                                                {{ __('buttons.delete') }}
+                                            </button>
+                                        @endcan
                                     </div>
                                 </li>
 

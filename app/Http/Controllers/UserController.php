@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use LogicException;
 
 class UserController extends AController
 {
@@ -78,9 +79,6 @@ class UserController extends AController
     }
 
     /**
-     * @param Request $request
-     * @param User $user
-     * @return RedirectResponse
      * @throws ValidationException
      */
     #[Post('/people-management/users/{user}', 'update_user')]
@@ -101,16 +99,21 @@ class UserController extends AController
             'email' => $data['email'],
         ];
 
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $updateData['password'] = Hash::make($data['password']);
         }
 
         $user->update($updateData);
 
         $this->flashSuccess('User updated successfully.');
+
         return back();
     }
 
+    /**
+     * @throws ValidationException
+     * @throws LogicException
+     */
     #[Post('/people-management/users/delete/{user}', 'delete_user')]
     public function deleteUser(User $user): RedirectResponse
     {
