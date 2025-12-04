@@ -14,7 +14,6 @@
     },
     "dependencies": {
         "@yaireo/tagify": "^4.35.6",
-        "fast-glob": "^3.3.3",
-        "npm": "^11.6.4"
+        "fast-glob": "^3.3.3"
     }
 }
