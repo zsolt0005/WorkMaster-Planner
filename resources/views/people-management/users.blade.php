@@ -212,6 +212,88 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="modal fade" id="deleteUserModal-{{ $user->id }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form method="POST" action="{{ route('delete_user', $user->id) }}">
+                                                @csrf
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">{{ __('headers.delete-user') }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Si si istý, že chceš odstrániť používateľa <strong>{{ $user->email }}</strong>?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-link" data-bs-dismiss="modal" type="button">{{ __('buttons.cancel') }}</button>
+                                                    <button class="btn btn-danger" type="submit">{{ __('buttons.delete') }}</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal fade" id="editUserModal-{{ $user->id }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form action="{{ route('update_user', $user->id) }}" method="POST">
+                                                @csrf
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">{{ __('users.headers.edit-user') }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="username-{{ $user->id }}">{{ __('users.forms.name') }}</label>
+                                                        <input type="text" name="username" id="username-{{ $user->id }}"
+                                                               class="form-control"
+                                                               value="{{ old('username', $user->username) }}"
+                                                               required>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="full_name-{{ $user->id }}">{{ __('users.forms.full-name') }}</label>
+                                                        <input type="text" name="full_name" id="full_name-{{ $user->id }}"
+                                                               class="form-control"
+                                                               value="{{ old('full_name', $user->full_name) }}"
+                                                               required>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="email-{{ $user->id }}">{{ __('users.forms.email') }}</label>
+                                                        <input type="email" name="email" id="email-{{ $user->id }}"
+                                                               class="form-control"
+                                                               value="{{ old('email', $user->email) }}"
+                                                               required>
+                                                    </div>
+
+                                                    <hr>
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="password-{{ $user->id }}">{{ __('users.forms.new-password') }}</label>
+                                                        <input type="password" name="password" id="password-{{ $user->id }}"
+                                                               class="form-control" placeholder="********">
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="password_confirmation-{{ $user->id }}">{{ __('users.forms.password-confirmation') }}</label>
+                                                        <input type="password" name="password_confirmation" id="password_confirmation-{{ $user->id }}"
+                                                               class="form-control" placeholder="********">
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-link" data-bs-dismiss="modal" type="button">{{ __('buttons.cancel') }}</button>
+                                                    <button class="btn btn-primary" type="submit">{{ __('buttons.save') }}</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
                             @empty
                                 <li class="list-group-item">No users found.</li>
                             @endforelse

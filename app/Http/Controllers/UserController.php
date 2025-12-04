@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends AController
@@ -64,7 +65,12 @@ class UserController extends AController
             'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
-        User::create($data);
+        User::create([
+            'username' => $data['username'],
+            'full_name' => $data['full_name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
 
         $this->flashSuccess('User created.');
 
@@ -73,28 +79,33 @@ class UserController extends AController
 
     /**
      * @param Request $request
-     * @param $user
+     * @param User $user
      * @return RedirectResponse
      * @throws ValidationException
      */
-    #[Post('/people-management/users', 'create_user')]
-    public function updateUser(Request $request, $user): RedirectResponse
+    #[Post('/people-management/users/{user}', 'update_user')]
+    public function updateUser(Request $request, User $user): RedirectResponse
     {
         Gate::authorize(Permissions::EDIT_USER);
 
         $data = $request->validate([
             'username' => ['required', 'string', 'max:50', "unique:users,username,{$user->id}"],
             'full_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,'.User::EMAIL, 'max:255'],
-            'password' => ['required', 'confirmed', 'min:8'],
+            'email' => ['required', 'email', 'unique:users,'.User::EMAIL.','.$user->id, 'max:255'],
+            'password' => ['nullable', 'confirmed', 'min:8'],
         ]);
 
-        $user->update([
+        $updateData = [
             'username' => $data['username'],
             'full_name' => $data['full_name'],
             'email' => $data['email'],
-            'password' => $data['password'] ?? null,
-        ]);
+        ];
+
+        if (!empty($data['password'])) {
+            $updateData['password'] = Hash::make($data['password']);
+        }
+
+        $user->update($updateData);
 
         $this->flashSuccess('User updated successfully.');
         return back();

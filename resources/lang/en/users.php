@@ -14,5 +14,6 @@ return [
         'email' => 'Email',
         'password' => 'Password',
         'password-confirmation' => 'Password Confirmation',
+        'new-password' => 'New Password',
     ],
 ];
