@@ -3,6 +3,9 @@
 @section('title', __('dashboard.title'))
 
 @section('content')
+
+@vite(['resources/js/pages/dashboard/dashboard.js'])
+
     <div class="container py-5">
         <h1 class="mb-4">{{ __('dashboard.title') }}</h1>
 
@@ -140,17 +143,32 @@
                     : $selectedUser->full_name . ' ' . __('dashboard.heading.view.stats') }}
             </h3>
             @can('view_users_dashboard')
-                <form method="GET" class="d-flex">
-                    <select name="user_id" class="form-select me-2">
-                        <option value="">{{ __('Select Employee') }}</option>
-                        @foreach($allUsers as $u)
-                            <option value="{{ $u->id }}" {{ $selectedUserId == $u->id ? 'selected' : '' }}>
-                                {{ $u->full_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <button type="submit" class="btn btn-primary">{{ __('dashboard.filter') }}</button>
-                </form>
+                <div class="col-auto">
+                    <form method="GET" class="mb-3">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text fw-bold">{{ __('Select Employee') }}</span>
+
+                            <input type="text"
+                                   id="user_id"
+                                   name="user_id"
+                                   data-tagify-enabled="true"
+                                   data-tagify-config='{
+                                       "url": "{{ route("users_search") }}",
+                                       "multiple": false,
+                                       "enforceWhitelist": true,
+                                       "maxItems": 1,
+                                       "prefetch": true
+                                   }'
+                                   value="{{ request('user_id') }}"
+                                   class="form-control tagify-fixed"
+                                   placeholder="{{ __('calendar.type_to_search') }}">
+
+                            <button type="submit" class="btn btn-primary">
+                                {{ __('dashboard.filter') }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             @endcan
         </div>
 

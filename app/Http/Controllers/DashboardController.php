@@ -12,6 +12,8 @@ use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 final class DashboardController extends AController
 {
@@ -19,19 +21,27 @@ final class DashboardController extends AController
     public function default(): View
     {
         $user = $this->getAuthUser();
-        $userId = request()->query('user_id');
+        $userIdData = request()->query('user_id', '[]');
+
+        try {
+            $decoded = Json::decode($userIdData, true) ?? [];
+        } catch (JsonException) {
+            $decoded = [];
+        }
+
+        $userId = $decoded[0]['id'] ?? null;
+
         $selectedUser = $userId ? User::find($userId) : $user;
+
         if ($userId && ! $selectedUser) {
             abort(404, 'User not found');
         }
-        $selectedUserId = $selectedUser->id;
 
-        if ($userId && ! ($selectedUser = User::find($userId))) {
-            abort(404, 'User not found');
-        }
         if ($selectedUser->id !== $user->id) {
             Gate::authorize(Permissions::VIEW_USERS_DASHBOARD);
         }
+
+        $selectedUserId = $selectedUser->id;
 
         $allUsers = User::orderBy('full_name')->get();
 
