@@ -3,6 +3,7 @@
 return [
     'tabs' => [
         'event_types' => 'Event types',
+        'public_holidays' => 'Public holidays',
     ],
     'create' => [
         'create' => 'Create',
@@ -37,5 +38,11 @@ return [
         'save' => 'Save changes',
         'success' => 'Event type <strong>:id</strong> updated successfully.',
         'error' => 'Something went wrong while updating <strong>:id</strong> event type.',
+    ],
+    'public_holidays' => [
+        'country' => 'Country',
+        'year' => 'Year',
+        'load_holidays' => 'Load holidays',
+        'delete_holidays' => 'Delete all holidays',
     ],
 ];

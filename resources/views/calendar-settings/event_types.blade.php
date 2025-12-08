@@ -13,7 +13,8 @@
         <h1 class="mb-4">Calendar settings</h1>
 
         @include('parts._tabs', ['tabs' => [
-            'calendar_settings' => __('calendar_settings.tabs.event_types')
+            'calendar_settings' => __('calendar_settings.tabs.event_types'),
+            'public_holidays' => __('calendar_settings.tabs.public_holidays')
         ]])
 
         <div class="row g-4 mb-5">
