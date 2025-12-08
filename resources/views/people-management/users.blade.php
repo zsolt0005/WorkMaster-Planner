@@ -14,61 +14,62 @@
 
         <div class="row g-4">
             <div class="col-12 col-lg-12">
-                <div class="card shadow-sm">
+                <div class="card shadow-sm mb-5">
                     @can(\App\Permissions::CREATE_USER)
-                    <div class="card-body">
-                        <h2 class="h5 mb-3">{{ __('users.headers.create-user') }}</h2>
+                        <div class="card-body">
+                            <h2 class="h5 mb-3">{{ __('users.headers.create-user') }}</h2>
 
-                        <form method="POST" action="{{ route('create_user') }}" novalidate>
-                            @csrf
+                            <form method="POST" action="{{ route('create_user') }}" novalidate>
+                                @csrf
 
-                            <div class="mb-3">
-                                <label class="form-label" for="username">{{ __('users.forms.name') }}</label>
-                                <input type="text" id="username" name="username"
-                                       value="{{ old('username') }}"
-                                       class="form-control @error('username') is-invalid @enderror" placeholder="username123"
-                                       required>
-                                @error('username') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="username">{{ __('users.forms.name') }}</label>
+                                    <input type="text" id="username" name="username"
+                                           value="{{ old('username') }}"
+                                           class="form-control @error('username') is-invalid @enderror" placeholder="username123"
+                                           required>
+                                    @error('username') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div class="mb-3">
-                                <label class="form-label" for="full_name">{{ __('users.forms.full-name') }}</label>
-                                <input type="text" id="full_name" name="full_name"
-                                       value="{{ old('full_name') }}"
-                                       class="form-control @error('full_name') is-invalid @enderror" placeholder="John Doe"
-                                       required>
-                                @error('full_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="full_name">{{ __('users.forms.full-name') }}</label>
+                                    <input type="text" id="full_name" name="full_name"
+                                           value="{{ old('full_name') }}"
+                                           class="form-control @error('full_name') is-invalid @enderror" placeholder="John Doe"
+                                           required>
+                                    @error('full_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div class="mb-3">
-                                <label class="form-label" for="email">{{ __('users.forms.email') }}</label>
-                                <input type="email" id="email" name="email"
-                                       value="{{ old('email') }}"
-                                       class="form-control @error('email') is-invalid @enderror" placeholder="johndoe@domain.com"
-                                       required>
-                                @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="email">{{ __('users.forms.email') }}</label>
+                                    <input type="email" id="email" name="email"
+                                           value="{{ old('email') }}"
+                                           class="form-control @error('email') is-invalid @enderror" placeholder="johndoe@domain.com"
+                                           required>
+                                    @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div class="mb-3">
-                                <label class="form-label" for="password">{{ __('users.forms.password') }}</label>
-                                <input type="password" id="password" name="password"
-                                       class="form-control @error('password') is-invalid @enderror" placeholder="********"
-                                       required>
-                                @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                            </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="password">{{ __('users.forms.password') }}</label>
+                                    <input type="password" id="password" name="password"
+                                           class="form-control @error('password') is-invalid @enderror" placeholder="********"
+                                           required>
+                                    @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                </div>
 
-                            <div class="mb-3">
-                                <label class="form-label" for="password_confirmation">{{ __('users.forms.password-confirmation') }}</label>
-                                <input type="password" id="password_confirmation" name="password_confirmation"
-                                       class="form-control" placeholder="********"
-                                       required>
-                            </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="password_confirmation">{{ __('users.forms.password-confirmation') }}</label>
+                                    <input type="password" id="password_confirmation" name="password_confirmation"
+                                           class="form-control" placeholder="********"
+                                           required>
+                                </div>
 
-                            <button class="btn btn-primary">Create User</button>
-                        </form>
-                    </div>
+                                <button class="btn btn-primary">Create User</button>
+                            </form>
+                        </div>
                     @endcan
-
+                </div>
+                <div class="card shadow-sm">
                     <div class="card-body">
                         <h2 class="h4 mb-3">{{ __('users.headers.users') }}</h2>
 

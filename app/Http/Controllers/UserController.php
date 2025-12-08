@@ -12,6 +12,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use LogicException;
 
@@ -59,12 +61,37 @@ class UserController extends AController
     {
         Gate::authorize(Permissions::CREATE_USER);
 
-        $data = $request->validate([
-            'username' => ['required', 'string', 'max:50', 'unique:users,username'],
-            'full_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,'.User::EMAIL, 'max:255'],
-            'password' => ['required', 'confirmed', 'min:8'],
+        $user = $this->getAuthUser();
+
+        $validator = Validator::make($request->all(), [
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users', 'username')->ignore($user->id),
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+            'full_name' => ['required', 'string', 'min:3'],
+            'password' => [
+                'required',
+                'string',
+                'min:5',
+                'confirmed',
+            ],
         ]);
+
+        if ($validator->fails()) {
+            $this->flashError($validator->errors()->first());
+
+            return back();
+        }
+
+        $data = $validator->validated();
 
         User::create([
             'username' => $data['username'],
