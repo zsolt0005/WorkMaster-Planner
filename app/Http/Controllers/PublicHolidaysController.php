@@ -58,7 +58,7 @@ final class PublicHolidaysController extends AController
         );
 
         if ($created === 0) {
-            $this->flashInfo(__('No new public holidays were created (they may already exist).'));
+            $this->flashWarning(__('No new public holidays were created (they may already exist).'));
         } else {
             $this->flashSuccess(__('Created :count public holiday events.', ['count' => $created]));
         }
