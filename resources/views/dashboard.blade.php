@@ -157,7 +157,8 @@
                                        "multiple": false,
                                        "enforceWhitelist": true,
                                        "maxItems": 1,
-                                       "prefetch": true
+                                       "prefetch": true,
+                                       "mode": "select"
                                    }'
                                    value="{{ request('user_id') }}"
                                    class="form-control tagify-fixed"
