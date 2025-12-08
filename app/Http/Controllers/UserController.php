@@ -11,7 +11,11 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use LogicException;
 
 class UserController extends AController
 {
@@ -45,6 +49,108 @@ class UserController extends AController
         $user->roles()->sync($ids);
 
         $this->flashSuccess('Roles updated for user: '.$user->email);
+
+        return back();
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    #[Post('/people-management/users', 'create_user')]
+    public function createUser(Request $request): RedirectResponse
+    {
+        Gate::authorize(Permissions::CREATE_USER);
+
+        $user = $this->getAuthUser();
+
+        $validator = Validator::make($request->all(), [
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users', 'username')->ignore($user->id),
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($user->id),
+            ],
+            'full_name' => ['required', 'string', 'min:3'],
+            'password' => [
+                'required',
+                'string',
+                'min:5',
+                'confirmed',
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            $this->flashError($validator->errors()->first());
+
+            return back();
+        }
+
+        $data = $validator->validated();
+
+        User::create([
+            'username' => $data['username'],
+            'full_name' => $data['full_name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
+
+        $this->flashSuccess('User created.');
+
+        return back();
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    #[Post('/people-management/users/{user}', 'update_user')]
+    public function updateUser(Request $request, User $user): RedirectResponse
+    {
+        Gate::authorize(Permissions::EDIT_USER);
+
+        $data = $request->validate([
+            'username' => ['required', 'string', 'max:50', "unique:users,username,{$user->id}"],
+            'full_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,'.User::EMAIL.','.$user->id, 'max:255'],
+            'password' => ['nullable', 'confirmed', 'min:8'],
+        ]);
+
+        $updateData = [
+            'username' => $data['username'],
+            'full_name' => $data['full_name'],
+            'email' => $data['email'],
+        ];
+
+        if (! empty($data['password'])) {
+            $updateData['password'] = Hash::make($data['password']);
+        }
+
+        $full_name = $user->full_name;
+        $user->update($updateData);
+
+        $this->flashSuccess('User '.$full_name.' updated successfully.');
+
+        return back();
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws LogicException
+     */
+    #[Post('/people-management/users/delete/{user}', 'delete_user')]
+    public function deleteUser(User $user): RedirectResponse
+    {
+        Gate::authorize(Permissions::DELETE_USER);
+
+        $full_name = $user->full_name;
+        $user->delete();
+
+        $this->flashSuccess('User '.$full_name.' successfully deleted.');
 
         return back();
     }
