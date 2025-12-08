@@ -13,12 +13,6 @@ final class PublicHolidayService
     private string $baseUrl = 'https://openholidaysapi.org';
 
     /**
-     * High-level method:
-     * - checks if holiday events already exist in DB
-     * - if not, calls API
-     * - stores holidays as Event records
-     * - returns how many were created
-     *
      * @throws RequestException
      * @throws ConnectionException
      */
@@ -26,13 +20,11 @@ final class PublicHolidayService
         string $countryIsoCode,
         string $validFrom,
         string $validTo,
-        string $languageIsoCode = 'EN',
-        ?string $subdivisionCode = null,
-        string $holidayEventTypeId = 'holiday',
-        ?int $userId = null,
+        string $languageIsoCode,
+        ?string $subdivisionCode,
+        string $holidayEventTypeId,
+        int $userId,
     ): int {
-        $userId ??= auth()->id();
-
         $startDateTime = $validFrom.' 00:00:00';
         $endDateTime = $validTo.' 23:59:59';
 
@@ -70,7 +62,6 @@ final class PublicHolidayService
                 continue;
             }
 
-            // pick name in requested language, else first available
             $name = null;
             if (! empty($holiday['name']) && is_array($holiday['name'])) {
                 foreach ($holiday['name'] as $nameItem) {
@@ -79,10 +70,7 @@ final class PublicHolidayService
                         break;
                     }
                 }
-
-                if ($name === null) {
-                    $name = $holiday['name'][0]['text'] ?? null;
-                }
+                $name ??= $holiday['name'][0]['text'] ?? null;
             }
             $name ??= 'Public holiday';
 
@@ -124,8 +112,6 @@ final class PublicHolidayService
     }
 
     /**
-     * Low-level API client – still available if you need raw data.
-     *
      * @throws RequestException
      * @throws ConnectionException
      */
