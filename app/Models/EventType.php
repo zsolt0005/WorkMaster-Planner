@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property string $identifier
@@ -33,4 +34,9 @@ class EventType extends Model
         'background_color',
         'text_color',
     ];
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(Event::class, Event::EVENT_TYPE_ID, self::IDENTIFIER);
+    }
 }

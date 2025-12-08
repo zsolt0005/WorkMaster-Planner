@@ -17,6 +17,7 @@ final class PermissionSeeder extends Seeder
         $this->createRolePermissions();
         $this->createCalendarPermissions();
         $this->createUsersPermissions();
+        $this->createDashboardPermissions();
     }
 
     private function createRolePermissions(): void
@@ -44,6 +45,11 @@ final class PermissionSeeder extends Seeder
         $this->createPermission(Permissions::CREATE_EVENT_FOR_OTHERS, 'Allows creating events for other users');
         $this->createPermission(Permissions::DELETE_EVENT, 'Allows deleting events');
         $this->createPermission(Permissions::DELETE_EVENT_FOR_OTHERS, 'Allows deleting events for other users');
+    }
+
+    private function createDashboardPermissions(): void
+    {
+        $this->createPermission('view_users_dashboard', 'Allows to view other users statistics');
     }
 
     private function createUsersPermissions(): void

@@ -9,3 +9,23 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+.input-group .tagify-fixed {
+    max-width: 10rem;
+    width: 10rem;
+
+    display: inline-flex;
+    flex-wrap: nowrap;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+.tagify__tag > div:before {
+    box-shadow: 0 0 0 10em var(--tag-bg) inset;
+}
+
+.tagify__tag__removeBtn:hover + div:before {
+    box-shadow: 0 0 0 10em var(--tag-remove-bg, rgba(211, 148, 148, .3)) inset !important;
+}
