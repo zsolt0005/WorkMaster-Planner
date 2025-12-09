@@ -215,6 +215,7 @@
     @include('parts._context_menu')
     @include('calendar.parts._create-event')
     @include('calendar.parts._delete-event')
+    @include('calendar.parts._view-details')
 
 
     <script>
@@ -229,6 +230,10 @@
 
                 @can(Permissions::DELETE_EVENT)
                 .set('{{ __('calendar.context_menu.delete_event') }}', 'deleteEvent')
+                @endcan
+
+                @can(Permissions::VIEW_EVENT)
+                .set('{{ __('calendar.context_menu.view_details') }}', 'viewDetails')
                 @endcan
 
                 .set('--spacer--other', '{{ __('calendar.context_menu.other') }}')

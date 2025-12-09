@@ -41,10 +41,13 @@ final class PermissionSeeder extends Seeder
     private function createCalendarPermissions(): void
     {
         $this->createPermission(Permissions::EDIT_CALENDAR_SETTINGS, 'Allows to view and modify calendar settings');
+        $this->createPermission(Permissions::VIEW_EVENT, 'Allows viewing events');
         $this->createPermission(Permissions::CREATE_EVENT, 'Allows creating events');
         $this->createPermission(Permissions::CREATE_EVENT_FOR_OTHERS, 'Allows creating events for other users');
         $this->createPermission(Permissions::DELETE_EVENT, 'Allows deleting events');
         $this->createPermission(Permissions::DELETE_EVENT_FOR_OTHERS, 'Allows deleting events for other users');
+        $this->createPermission(Permissions::EDIT_EVENT, 'Allows editing events');
+        $this->createPermission(Permissions::EDIT_EVENT_FOR_OTHERS, 'Allows editing events for other users');
     }
 
     private function createDashboardPermissions(): void
