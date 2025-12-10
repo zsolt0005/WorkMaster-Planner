@@ -14,6 +14,7 @@ use DateTimeImmutable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Nette\Utils\Arrays;
@@ -162,6 +163,8 @@ final class CalendarController extends AController
         }
 
         try {
+
+            DB::statement('SET @current_user_id = ?', [$currentUserId]);
             $event->delete();
             $this->flashSuccess(__('calendar.delete_event.success'));
         } catch (Throwable $e) {
