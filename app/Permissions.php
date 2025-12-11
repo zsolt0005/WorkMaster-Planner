@@ -32,9 +32,15 @@ final class Permissions
 
     public const string EDIT_CALENDAR_SETTINGS = 'edit_calendar_settings';
 
+    public const string VIEW_EVENT = 'view_event';
+
     public const string CREATE_EVENT = 'create_event';
 
     public const string CREATE_EVENT_FOR_OTHERS = 'create_event_for_others';
+
+    public const string EDIT_EVENT = 'edit_event';
+
+    public const string EDIT_EVENT_FOR_OTHERS = 'edit_event_for_others';
 
     public const string DELETE_EVENT = 'delete_event';
 

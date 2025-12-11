@@ -171,6 +171,111 @@ final class CalendarController extends AController
         return redirect()->route('calendar');
     }
 
+    #[Post('/calendar/event/update', 'calendar__event__update')]
+    public function updateEvent(Request $request): RedirectResponse
+    {
+        if (! Gate::has(Permissions::EDIT_EVENT)) {
+            $this->flashError(__('calendar.edit_event.cant_edit_event'));
+
+            return redirect()->route('calendar');
+        }
+
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'edit_event__id' => [
+                'required',
+                'integer',
+                'exists:events,id',
+            ],
+            'edit_event__title' => [
+                'required',
+                'string',
+                'min:1',
+                'max:255',
+            ],
+            'edit_event__description' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+            'edit_event__event_type_id' => [
+                'required',
+                'string',
+                'exists:event_types,identifier',
+            ],
+            'edit_event__start_date_time' => [
+                'required',
+                'date',
+            ],
+            'edit_event__end_date_time' => [
+                'required',
+                'date',
+                function (string $attribute, mixed $value, \Closure $fail) use ($data): void {
+                    // Only validate if start and end are valid dates
+                    try {
+                        $start = Carbon::parse($data['edit_event__start_date_time'] ?? null);
+                        $end = Carbon::parse($value);
+                    } catch (Throwable) {
+                        return; // date rule will handle invalid formats
+                    }
+
+                    if ($end->lessThan($start->copy()->addMinute())) {
+                        $fail('The end date and time must be at least 1 minute after the start date and time.');
+                    }
+                },
+            ],
+            'edit_event__assigned_user_id' => [
+                'required',
+                'integer',
+                'exists:users,id',
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            $this->flashError($validator->errors()->first());
+
+            return redirect()->route('calendar');
+        }
+
+        $eventId = (int) $data['edit_event__id'];
+        $event = Event::query()->find($eventId);
+
+        if (! $event) {
+            $this->flashError(__('calendar.edit_event.event_doesnt_exists'));
+
+            return redirect()->route('calendar');
+        }
+
+        $currentUserId = $this->getAuthUser()->id;
+
+        if (
+            $currentUserId !== $event->created_by_user_id
+            && $currentUserId !== $event->assigned_user_id
+            && ! Gate::has(Permissions::EDIT_EVENT_FOR_OTHERS)
+        ) {
+            $this->flashError(__('calendar.edit_event.cant_edit_event_for_other_user'));
+
+            return redirect()->route('calendar');
+        }
+
+        $event->title = $data['edit_event__title'];
+        $event->description = $data['edit_event__description'] ?? '';
+        $event->event_type_id = $data['edit_event__event_type_id'];
+        $event->start_date_time = $data['edit_event__start_date_time'];
+        $event->end_date_time = $data['edit_event__end_date_time'];
+        $event->assigned_user_id = (int) $data['edit_event__assigned_user_id'];
+
+        try {
+            $event->save();
+            $this->flashSuccess(__('calendar.edit_event.success'));
+        } catch (Throwable $e) {
+            $this->flashError(__('calendar.edit_event.failed'));
+        }
+
+        return redirect()->route('calendar');
+    }
+
     /**
      * @return DateEntry[]
      */

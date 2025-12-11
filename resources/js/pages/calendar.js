@@ -2,12 +2,14 @@ import { CalendarContextMenu } from './../Components/CalendarContextMenu.js';
 import { CreateEventMenuItem } from './calendar/_create-event.js'
 import { DeleteEventMenuItem } from './calendar/_delete-event.js'
 import { RefreshEventMenuItem } from './calendar/_refresh-event.js'
+import { ViewDetailsMenuItem } from './calendar/_view-details.js'
 
 window.menuItems ??= new Map();
 const handlers = {
     createEvent: new CreateEventMenuItem(),
     deleteEvent: new DeleteEventMenuItem(),
     refreshEvent: new RefreshEventMenuItem(),
+    viewDetails: new ViewDetailsMenuItem(),
 };
 
 document.addEventListener('DOMContentLoaded', () => {
