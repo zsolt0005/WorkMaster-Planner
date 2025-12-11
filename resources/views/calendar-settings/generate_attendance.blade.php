@@ -31,7 +31,7 @@
             <tr>
                 <td id="generateLabel">{{ __('calendar_settings.generate_attendance.generate_week') }}</td>
                 <td>
-                    <input type="text" class="form-control" name="current_period" value="50">
+                    <input type="text" class="form-control" name="current_period">
                 </td>
             </tr>
             <tr>
@@ -62,20 +62,11 @@
                 </td>
             </tr>
             <tr>
-                <td>{{ __('calendar_settings.generate_attendance.work_holiday') }}</td>
-                <td>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="work_holiday" id="work_holiday">
-                        <label class="form-check-label" for="work_holiday">{{ __('calendar_settings.generate_attendance.yes') }}</label>
-                    </div>
-                </td>
-            </tr>
-            <tr>
                 <td style="width:40%">
                     <label class="form-label">{{ __('calendar_settings.generate_attendance.users') }}</label>
                     <select id="leftList" class="form-select" multiple size="8">
                         @foreach($users as $user)
-                            <option value="{{ $user->username }}">{{ $user->full_name }}</option>
+                            <option value="{{ $user->id }}">{{ $user->full_name }}</option>
                         @endforeach
                     </select>
                 </td>
@@ -98,8 +89,6 @@
                 <td>
                     <select class="form-select" name="first_user">
                         <option value="random">{{ __('calendar_settings.generate_attendance.random') }}</option>
-                        <option value="1">User 1</option>
-                        <option value="2">User 2</option>
                     </select>
                 </td>
             </tr>
@@ -109,6 +98,7 @@
         <div class="mt-4">
             <form method="POST" action="{{ route('generate_attendance__run') }}">
                 @csrf
+                <input type="hidden" name="selected_users" id="selectedUsersInput">
                 <button type="submit" class="btn btn-success w-100">
                     {{ __('calendar_settings.generate_attendance.run_button') }}
                 </button>
@@ -128,6 +118,9 @@
         const firstUserSelect = document.querySelector('select[name="first_user"]');
         const calculationMode = document.getElementById('calculationMode');
         const generateLabel = document.getElementById('generateLabel');
+        const selectedUsersInput = document.getElementById('selectedUsersInput');
+        const form = document.querySelector('form[action="{{ route('generate_attendance__run') }}"]');
+        const currentPeriodInput = document.querySelector('input[name="current_period"]');
 
         const generateWeekText = @json(__('calendar_settings.generate_attendance.generate_week'));
         const generateMonthText = @json(__('calendar_settings.generate_attendance.generate_month'));
@@ -137,7 +130,7 @@
 
             const randomOption = document.createElement('option');
             randomOption.value = 'random';
-            randomOption.textContent = 'Random';
+            randomOption.textContent = @json(__('calendar_settings.generate_attendance.random'));
             firstUserSelect.appendChild(randomOption);
 
             Array.from(rightList.options).forEach(option => {
@@ -153,6 +146,25 @@
                 generateLabel.textContent = generateWeekText;
             } else if (calculationMode.value === 'month') {
                 generateLabel.textContent = generateMonthText;
+            }
+            updateCurrentPeriod();
+        }
+
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        function updateCurrentPeriod() {
+            const today = new Date();
+
+            if (calculationMode.value === 'week') {
+                currentPeriodInput.value = getWeekNumber(today);
+            } else if (calculationMode.value === 'month') {
+                currentPeriodInput.value = today.getMonth() + 1;
             }
         }
 
@@ -171,6 +183,18 @@
         });
 
         calculationMode.addEventListener('change', updateGenerateLabel);
+
+        form.addEventListener('submit', (event) => {
+            const values = Array.from(rightList.options).map(option => option.value);
+
+            if (values.length < 3) {
+                alert(@json(__('calendar_settings.generate_attendance.warning')));
+                event.preventDefault();
+                return;
+            }
+
+            selectedUsersInput.value = JSON.stringify(values);
+        });
 
         updateFirstUserSelect();
         updateGenerateLabel();

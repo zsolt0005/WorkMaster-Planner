@@ -47,6 +47,7 @@ return [
         'delete_holidays' => 'Delete all holidays',
     ],
     'generate_attendance' => [
+        'run_button' => 'Generate attendance',
         'calculation' => 'Calculation',
         'week' => 'Week',
         'month' => 'Month',
@@ -61,8 +62,8 @@ return [
         'yes' => 'Yes',
         'users' => 'Users',
         'selected_users' => 'Selected users',
-        'first_user' => 'Who starts first shift',
+        'first_user' => 'Who starts first',
         'random' => 'Random',
-        'run_button' => 'Generate attendance',
+        'warning' => 'You must select at least 3 users.',
     ],
 ];
