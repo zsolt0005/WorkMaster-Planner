@@ -270,6 +270,8 @@ final class CalendarController extends AController
         $event->assigned_user_id = (int) $data['edit_event__assigned_user_id'];
 
         try {
+
+            DB::statement('SET @current_user_id = ?', [$currentUserId]);
             $event->save();
             $this->flashSuccess(__('calendar.edit_event.success'));
         } catch (Throwable $e) {

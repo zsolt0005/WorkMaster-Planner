@@ -7,6 +7,7 @@ return [
 
         'create_event' => 'Create event',
         'view_details' => 'View details',
+        'view_history' => 'View history',
         'delete_event' => 'Delete event',
         'refresh' => 'Refresh',
     ],
@@ -71,6 +72,13 @@ return [
         'cant_edit_event_for_other_user' => 'You have no permission to edit events for other users.',
         'success' => 'Event updated successfully.',
         'failed' => 'Something went wrong while editing event.',
+    ],
+
+    'event_history' => [
+        'header' => 'Event history',
+        'title' => 'Title',
+        'close_button' => 'Close',
+        'loading' => 'Loading history...',
     ],
 
     'event_type' => 'Event type',
