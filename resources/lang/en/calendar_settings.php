@@ -65,5 +65,6 @@ return [
         'first_user' => 'Who starts first',
         'random' => 'Random',
         'warning' => 'You must select at least 3 users.',
+        'how_many_people_on_one_shift' => 'How many people one shift.',
     ],
 ];

@@ -37,7 +37,7 @@
                     <td>
                         <input type="number" class="form-control" name="current_period" id="currentPeriodInput">
                         <div class="invalid-feedback">
-                            Hodnota je mimo povoleného rozsahu.
+                            !
                         </div>
                     </td>
                 </tr>
@@ -49,6 +49,13 @@
                             <option value="8">{{ __('calendar_settings.generate_attendance.shift_8') }}</option>
                             <option value="12">{{ __('calendar_settings.generate_attendance.shift_12') }}</option>
                         </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>{{ __('calendar_settings.generate_attendance.how_many_people_on_one_shift') }}</td>
+                    <td>
+                        <input value="1" type="number" class="form-control" name="how_many_people_on_one_shift" id="howManyPeopleOnOneShift">
                     </td>
                 </tr>
 
@@ -154,7 +161,7 @@
                     : generateMonthText;
 
             updateCurrentPeriodConstraints();
-            updateCurrentPeriod(); // vložené späť
+            updateCurrentPeriod();
         }
 
         function getWeekNumber(date) {
