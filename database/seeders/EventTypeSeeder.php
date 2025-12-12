@@ -46,5 +46,12 @@ final class EventTypeSeeder extends Seeder
             'background_color' => '#78cd32',
             'text_color' => '#000000',
         ]);
+
+        DB::table('event_types')->insertOrIgnore([
+            'identifier' => 'worktime',
+            'description' => 'Worktime',
+            'background_color' => '#18E73A',
+            'text_color' => '#E718C5',
+        ]);
     }
 }

@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\User;
 use App\Permissions;
 use App\Services\Router\Attributes\Get;
 use App\Services\Router\Attributes\Post;
+use DateTimeImmutable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 
 final class GenerateAttendanceController extends AController
 {
@@ -29,35 +30,45 @@ final class GenerateAttendanceController extends AController
     {
         Gate::authorize(Permissions::EDIT_CALENDAR_SETTINGS);
 
-        $calculationMode = $request->input('calculation_mode');
+        $weekOrMonth     = $request->input('calculation_mode');
         $currentPeriod   = (int) $request->input('current_period');
-        $shift           = (int) $request->input('shift');
+        $shiftTimeHours  = (int) $request->input('shift');
         $workSaturday    = $request->boolean('work_saturday');
         $workSunday      = $request->boolean('work_sunday');
-        $firstUser       = $request->input('first_user');
+        $firstShiftUser  = $request->input('first_user');
         $selectedUsers   = json_decode($request->input('selected_users', '[]'), true);
 
+        $users = User::all();
+
         if (count($selectedUsers) < 3) {
-            $this->flashError(__('You must select at least 3 users.'));
+            $this->flashError( __('calendar_settings.generate_attendance.warning') );
             return redirect()->route('generate_attendance');
         }
 
         $schedule = [];
 
-        if ($firstUser === 'random') {
+        if ($firstShiftUser === 'random') {
             $currentIndex = array_rand($selectedUsers);
         } else {
-            $currentIndex = array_search($firstUser, $selectedUsers);
+            $currentIndex = array_search($firstShiftUser, $selectedUsers);
             if ($currentIndex === false) {
                 $currentIndex = 0;
             }
         }
 
         $startHour = 6;
-        $daysCount = ($calculationMode === 'week') ? 7 : 30;
+        $daysCount = 7;
+        $year = (int) date('Y');
+
+        if ($weekOrMonth !== 'week') {
+            $periodDate = new DateTimeImmutable("$year-$currentPeriod-01");
+            $daysCount = (int) $periodDate->format('t');
+        }
 
         for ($day = 1; $day <= $daysCount; $day++) {
-            $dayOfWeek = $day % 7;
+            $date = new DateTimeImmutable("$year-$currentPeriod-$day");
+            $dayOfWeek = (int) $date->format('w'); // 0 = Sunday, 6 = Saturday
+
             if (!$workSaturday && $dayOfWeek === 6) {
                 continue;
             }
@@ -65,42 +76,94 @@ final class GenerateAttendanceController extends AController
                 continue;
             }
 
-            if ($shift === 8) {
-                $time = $startHour;
-                while ($time < 24) {
-                    $user = $selectedUsers[$currentIndex];
-                    $schedule[] = [
-                        'day' => $day,
-                        'start' => sprintf('%02d:00', $time),
-                        'end' => sprintf('%02d:00', ($time + 8) % 24),
-                        'user' => $user,
-                    ];
-                    $currentIndex = ($currentIndex + 1) % count($selectedUsers);
-                    $time += 8;
-                }
-            } elseif ($shift === 12) {
-                $user1 = $selectedUsers[$currentIndex];
-                $schedule[] = [
-                    'day' => $day,
-                    'start' => '06:00',
-                    'end' => '18:00',
-                    'user' => $user1,
-                ];
-                $currentIndex = ($currentIndex + 1) % count($selectedUsers);
+            $time = $startHour;
+            while ($time < 24) {
+                $userId = $selectedUsers[$currentIndex];
+                $user   = $users->find($userId);
 
-                $user2 = $selectedUsers[$currentIndex];
+                $startDateTime = $date->format('Y-m-d') . ' ' . sprintf('%02d:00:00', $time);
+                $endHour = ($time + $shiftTimeHours) % 24;
+
+                if ($endHour === 6) {
+                    $endDate = $date->modify('+1 day')->format('Y-m-d');
+                } else {
+                    $endDate = $date->format('Y-m-d');
+                }
+
+                $endDateTime = $endDate . ' ' . sprintf('%02d:00:00', $endHour);
+
                 $schedule[] = [
-                    'day' => $day,
-                    'start' => '18:00',
-                    'end' => '06:00',
-                    'user' => $user2,
+                    'event_type_id'      => 'worktime',
+                    'assigned_user_id'   => $userId,
+                    'created_by_user_id' => $this->getAuthUser()->id,
+                    'title'              => $user->full_name,
+                    'start_date_time'    => $startDateTime,
+                    'end_date_time'      => $endDateTime,
                 ];
+
                 $currentIndex = ($currentIndex + 1) % count($selectedUsers);
+                $time += $shiftTimeHours;
             }
         }
 
+/*
+ *
+            if ($shiftTimeHours === 8) {
+                $time = $startHour;
+                while ($time < 24) {
+                    $userId = $selectedUsers[$currentIndex];
+                    $user   = $users->find($userId);
+
+                    $startDateTime = $date->format('Y-m-d') . ' ' . sprintf('%02d:00:00', $time);
+                    $endHour = ($time + 8) % 24;
+
+                    if ($endHour === 6) {
+                        $endDate = $date->modify('+1 day')->format('Y-m-d');
+                    } else {
+                        $endDate = $date->format('Y-m-d');
+                    }
+
+                    $endDateTime = $endDate . ' ' . sprintf('%02d:00:00', $endHour);
+
+                    $schedule[] = [
+                        'event_type_id'      => 'worktime',
+                        'assigned_user_id'   => $userId,
+                        'created_by_user_id' => $this->getAuthUser()->id,
+                        'title'              => $user->full_name,
+                        'start_date_time'    => $startDateTime,
+                        'end_date_time'      => $endDateTime,
+                    ];
+
+                    $currentIndex = ($currentIndex + 1) % count($selectedUsers);
+                    $time += 8;
+                }
+            } elseif ($shiftTimeHours === 12) {
+                $nextDay = $date->modify('+1 day');
+                for ($i = 0; $i < 2; $i++){
+                    $userId = $selectedUsers[$currentIndex];
+                    $user   = $users->find($userId);
+
+                    $schedule[] = [
+                        'event_type_id'      => 'worktime',
+                        'assigned_user_id'   => $userId,
+                        'created_by_user_id' => $this->getAuthUser()->id,
+                        'title'              => $user->full_name,
+                        'start_date_time'    => $i == 0
+                                                    ?$date->format('Y-m-d') . ' 06:00:00'
+                                                    :$date->format('Y-m-d') . ' 18:00:00',
+                        'end_date_time'      => $i == 0
+                                                    ?$date->format('Y-m-d') . ' 18:00:00'
+                                                    :$nextDay->format('Y-m-d') . ' 06:00:00',
+                    ];
+                    $currentIndex = ($currentIndex + 1) % count($selectedUsers);
+                }
+            }
+        }
+*/
         print_r($schedule);
         exit;
+
+        Event::insert($schedule);
 
         $this->flashSuccess(__('Attendance successfully generated.'));
         return redirect()->route('generate_attendance');
