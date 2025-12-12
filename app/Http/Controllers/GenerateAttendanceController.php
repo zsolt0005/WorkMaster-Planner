@@ -42,7 +42,7 @@ final class GenerateAttendanceController extends AController
         $users = User::all();
 
         if (count($selectedUsers) < 3) {
-            $this->flashError( __('calendar_settings.generate_attendance.warning') );
+            $this->flashError(__('calendar_settings.generate_attendance.warning'));
             return redirect()->route('generate_attendance');
         }
 
@@ -76,16 +76,16 @@ final class GenerateAttendanceController extends AController
             }
             $dayOfWeek = (int) $date->format('w'); // 0 = Sunday, 6 = Saturday
 
-            if (!$workSaturday && $dayOfWeek === 6) {
+            if (! $workSaturday && $dayOfWeek === 6) {
                 continue;
             }
-            if (!$workSunday && $dayOfWeek === 0) {
+            if (! $workSunday && $dayOfWeek === 0) {
                 continue;
             }
 
             $time = $startHour;
             while ($time < 24) {
-                $startDateTime = $date->format('Y-m-d') . ' ' . sprintf('%02d:00:00', $time);
+                $startDateTime = $date->format('Y-m-d').' '.sprintf('%02d:00:00', $time);
                 $endHour = ($time + $shiftTimeHours) % 24;
 
                 if ($endHour === 6) {
@@ -93,12 +93,11 @@ final class GenerateAttendanceController extends AController
                 } else {
                     $endDate = $date->format('Y-m-d');
                 }
+                $endDateTime = $endDate.' '.sprintf('%02d:00:00', $endHour);
 
                 for ($j = 0; $j < $howManyPeopleOnOneShift; $j++) {
                     $userId = $selectedUsers[$currentIndex];
                     $user   = $users->find($userId);
-
-                    $endDateTime = $endDate . ' ' . sprintf('%02d:00:00', $endHour);
 
                     $schedule[] = [
                         'event_type_id'      => 'worktime',
