@@ -30,14 +30,14 @@ final class GenerateAttendanceController extends AController
     {
         Gate::authorize(Permissions::EDIT_CALENDAR_SETTINGS);
 
-        $weekOrMonth                = $request->input('calculation_mode');
-        $currentPeriod              = (int) $request->input('current_period');
-        $howManyPeopleOnOneShift    = (int) $request->input('how_many_people_on_one_shift');
-        $shiftTimeHours             = (int) $request->input('shift');
-        $workSaturday               = $request->boolean('work_saturday');
-        $workSunday                 = $request->boolean('work_sunday');
-        $firstShiftUser             = $request->input('first_user');
-        $selectedUsers              = json_decode($request->input('selected_users', '[]'), true);
+        $weekOrMonth = $request->input('calculation_mode');
+        $currentPeriod = (int)$request->input('current_period');
+        $howManyPeopleOnOneShift = (int)$request->input('how_many_people_on_one_shift');
+        $shiftTimeHours = (int)$request->input('shift');
+        $workSaturday = $request->boolean('work_saturday');
+        $workSunday = $request->boolean('work_sunday');
+        $firstShiftUser = $request->input('first_user');
+        $selectedUsers = json_decode($request->input('selected_users', '[]'), true);
 
         $users = User::all();
 
@@ -58,13 +58,14 @@ final class GenerateAttendanceController extends AController
         }
 
         $startHour = 6;
-        $year = (int) date('Y');
+        $year = (int)date('Y');
         $month = 1;
 
         $daysCount = 7;
         if ($weekOrMonth !== 'week') {
             $periodDate = new DateTimeImmutable("$year-$currentPeriod-01");
-            $daysCount = (int) $periodDate->format('t');
+            $daysCount = (int)$periodDate->format('t');
+        } else {
             $month = new DateTimeImmutable()->setISODate($year, $currentPeriod);
         }
 
