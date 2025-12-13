@@ -14,7 +14,8 @@
 
         @include('parts._tabs', ['tabs' => [
             'calendar_settings' => __('calendar_settings.tabs.event_types'),
-            'public_holidays' => __('calendar_settings.tabs.public_holidays')
+            'public_holidays' => __('calendar_settings.tabs.public_holidays'),
+            'generate_attendance' => __('calendar_settings.tabs.generate_attendance')
         ]])
 
         <div class="row g-4 mb-5">
