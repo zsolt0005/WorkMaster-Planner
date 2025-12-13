@@ -216,6 +216,7 @@
     @include('calendar.parts._create-event')
     @include('calendar.parts._delete-event')
     @include('calendar.parts._view-details')
+    @include('calendar.parts._view-history')
 
 
     <script>
@@ -234,6 +235,7 @@
 
                 @can(Permissions::VIEW_EVENT)
                 .set('{{ __('calendar.context_menu.view_details') }}', 'viewDetails')
+                .set('{{ __('calendar.context_menu.view_history') }}', 'viewHistory')
                 @endcan
 
                 .set('--spacer--other', '{{ __('calendar.context_menu.other') }}')
