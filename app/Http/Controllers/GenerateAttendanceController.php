@@ -59,14 +59,14 @@ final class GenerateAttendanceController extends AController
 
         $startHour = 6;
         $year = (int)date('Y');
-        $month = 1;
+        $month = "1";
 
         $daysCount = 7;
         if ($weekOrMonth !== 'week') {
             $periodDate = new DateTimeImmutable("$year-$currentPeriod-01");
             $daysCount = (int)$periodDate->format('t');
         } else {
-            $month = new DateTimeImmutable()->setISODate($year, $currentPeriod);
+            $month = (string)new DateTimeImmutable()->setISODate($year, $currentPeriod);
         }
 
         for ($day = 1; $day <= $daysCount; $day++) {
