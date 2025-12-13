@@ -3,6 +3,7 @@ import { CreateEventMenuItem } from './calendar/_create-event.js'
 import { DeleteEventMenuItem } from './calendar/_delete-event.js'
 import { RefreshEventMenuItem } from './calendar/_refresh-event.js'
 import { ViewDetailsMenuItem } from './calendar/_view-details.js'
+import { ViewHistoryMenuItem } from './calendar/_view-history.js'
 
 window.menuItems ??= new Map();
 const handlers = {
@@ -10,6 +11,7 @@ const handlers = {
     deleteEvent: new DeleteEventMenuItem(),
     refreshEvent: new RefreshEventMenuItem(),
     viewDetails: new ViewDetailsMenuItem(),
+    viewHistory: new ViewHistoryMenuItem(),
 };
 
 document.addEventListener('DOMContentLoaded', () => {
